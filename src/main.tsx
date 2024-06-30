@@ -1,9 +1,14 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { RouterProvider, createBrowserRouter } from 'react-router-dom'
+import { ErrorPage } from './components/ErrorPage'
 
 const router = createBrowserRouter([
-  { path: '/', element: <div>尼菈老婆</div> },
+  {
+    path: '/',
+    element: <div>尼菈老婆</div>,
+    errorElement: <ErrorPage />,
+  },
 ])
 const div = document.getElementById('root') as HTMLElement
 
