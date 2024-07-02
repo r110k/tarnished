@@ -52,6 +52,7 @@ export const ErrorPage: React.FC = () => {
         style={{
           width: '100vw',
           height: '120px',
+          flexShrink: 0,
           backgroundColor: '#364a8d',
           display: 'flex',
           flexDirection: 'column',
