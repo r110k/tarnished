@@ -1,15 +1,8 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import { RouterProvider, createBrowserRouter } from 'react-router-dom'
-import { ErrorPage } from './components/ErrorPage'
+import { RouterProvider } from 'react-router-dom'
+import { router } from './routes/router'
 
-const router = createBrowserRouter([
-  {
-    path: '/',
-    element: <div>尼菈老婆</div>,
-    errorElement: <ErrorPage />,
-  },
-])
 const div = document.getElementById('root') as HTMLElement
 
 const root = ReactDOM.createRoot(div)
