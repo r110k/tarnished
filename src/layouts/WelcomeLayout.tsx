@@ -7,10 +7,14 @@ export const WelcomeLayout: React.FC = () => {
   const location = useLocation()
   const outlet = useOutlet()
   const transitions = useTransition(location.pathname, {
-    from: { transform: 'translateX(100%)' },
+    from: {
+      transform: location.pathname === '/wecome/1'
+        ? 'translateX(0)'
+        : 'translateX(100%)',
+    },
     enter: { transform: 'translateX(0%)' },
     leave: { transform: 'translateX(-100%)' },
-    config: { duration: 3000 },
+    config: { duration: 600 },
   })
   map[location.pathname] = outlet
   return transitions((style, pathname) => {
