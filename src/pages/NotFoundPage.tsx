@@ -1,4 +1,4 @@
-export const ErrorPage: React.FC = () => {
+export const NotFoundPage: React.FC = () => {
   return (
     <div
       style={{
