@@ -12,6 +12,5 @@ declare module 'react' {
     bg?: string
     w?: string
     h?: string
-    style?: string
   }
 }
