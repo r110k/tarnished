@@ -1,10 +1,12 @@
-import { NavLink } from 'react-router-dom'
-
+import p from '../assets/images/welcome2.svg'
 export const Welcome2: React.FC = () => {
   return (
-    <div style={{ border: '1px solid red' }}>
-        2
-        <NavLink to="/welcome/3">下一页</NavLink>
+    <div flex flex-col items-center>
+      <img w-120px h-117px src={p} alt="这是一张可爱的图片" />
+      <h2 text-center text-32px mt-48px color="#9f7335">
+        即使引导早已破碎，<br />
+        也请您早日当上艾尔登之王
+      </h2>
     </div>
   )
 }

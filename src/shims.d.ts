@@ -10,5 +10,8 @@ declare module 'react' {
     before?: string 
     after?: string 
     bg?: string
+    w?: string
+    h?: string
+    style?: string
   }
 }
