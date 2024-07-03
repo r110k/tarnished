@@ -9,5 +9,6 @@ declare module 'react' {
     text?: string 
     before?: string 
     after?: string 
+    bg?: string
   }
 }
