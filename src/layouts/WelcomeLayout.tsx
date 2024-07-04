@@ -1,8 +1,10 @@
 import { animated, useTransition } from '@react-spring/web'
+import { useEffect, useRef, useState } from 'react'
+import { Link, useLocation, useNavigate, useOutlet } from 'react-router-dom'
 import type { ReactNode } from 'react'
-import { useRef, useState } from 'react'
-import { Link, useLocation, useOutlet } from 'react-router-dom'
+
 import logo from '../assets/images/catLogo.svg'
+import { useSwipe } from '../hooks/useSwipe'
 
 interface extraStyleInterface {position: 'relative' | 'absolute' }
 
@@ -13,6 +15,8 @@ const linkMap: Record<string, string> = {
   '/welcome/4': '/welcome/1',
 }
 export const WelcomeLayout: React.FC = () => {
+  const animating = useRef(false)
+
   const map = useRef<Record<string, ReactNode>>({})
   const location = useLocation()
   const outlet = useOutlet()
@@ -30,15 +34,32 @@ export const WelcomeLayout: React.FC = () => {
     },
     onRest: () => {
       setExtraStyle({ position: 'relative' })
+      animating.current = false
     },
   })
+
+  const mainRef = useRef<HTMLElement>(null)
+  const { direction } = useSwipe(mainRef, {
+    onTouchStart: e => e.preventDefault()
+  })
+  const nav = useNavigate()
+  useEffect(() => {
+    if (direction === 'left') {
+      if (animating.current) {
+        return
+      }
+      animating.current = true
+      nav(linkMap[location.pathname])
+    }
+  }, [direction, location.pathname, linkMap])
+
   return (
     <div bg="#041616" h-screen flex flex-col items-stretch pb-16px>
       <header shrink-0 text-center pt-64px>
         <img w-64px h-62px src={logo} alt="这是一个可爱的猫猫logo" />
         <h1 text="#ab7a36" text-32px>褪色者啊，来这里吧</h1>
       </header>
-      <main flex-1 shrink-1 relative >
+      <main ref={mainRef} flex-1 shrink-1 relative >
         {transitions((style, pathname) =>
             <animated.div key={pathname} style={{ ...style, ...extraStyle }}
               w="100%" h="100%" p-16px flex>
