@@ -23,12 +23,10 @@ export const WelcomeLayout: React.FC = () => {
   map.current[location.pathname] = outlet
   const [extraStyle, setExtraStyle] = useState<extraStyleInterface>({ position: 'relative' })
   const transitions = useTransition(location.pathname, {
-    from: {
-      transform: location.pathname === '/welcome/1' ? 'translateX(0)' : 'translateX(100%)',
-    },
+    from: { transform: location.pathname === '/welcome/1' ? 'translateX(0%)' : 'translateX(100%)', },
     enter: { transform: 'translateX(0%)' },
     leave: { transform: 'translateX(-100%)' },
-    config: { duration: 300 },
+    config: { duration: 5000 },
     onStart: () => {
       setExtraStyle({ position: 'absolute' })
     },
