@@ -19,12 +19,10 @@ export const useSwipe = (elRef: RefObject<HTMLElement>, config: Config) => {
     const newX = e.touches[0].clientX
     const d = newX - x.current
     if (Math.abs(d) < 12) {
-
-    }
-    else if (d > 0) {
+      return
+    } else if (d > 0) {
       setDirection('right')
-    }
-    else {
+    } else {
       setDirection('left')
     }
   }
