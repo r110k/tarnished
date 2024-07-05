@@ -23,7 +23,7 @@ export const WelcomeLayout: React.FC = () => {
   map.current[location.pathname] = outlet
   const [extraStyle, setExtraStyle] = useState<extraStyleInterface>({ position: 'relative' })
   const transitions = useTransition(location.pathname, {
-    from: { transform: location.pathname === '/welcome/1' ? 'translateX(0%)' : 'translateX(100%)', },
+    from: { transform: location.pathname === '/welcome/1' ? 'translateX(0%)' : 'translateX(100%)' },
     enter: { transform: 'translateX(0%)' },
     leave: { transform: 'translateX(-100%)' },
     config: { duration: 500 },
@@ -38,7 +38,7 @@ export const WelcomeLayout: React.FC = () => {
 
   const mainRef = useRef<HTMLElement>(null)
   const { direction } = useSwipe(mainRef, {
-    onTouchStart: e => e.preventDefault()
+    onTouchStart: e => e.preventDefault(),
   })
   const nav = useNavigate()
   useEffect(() => {
@@ -50,6 +50,11 @@ export const WelcomeLayout: React.FC = () => {
       nav(linkMap[location.pathname])
     }
   }, [direction, location.pathname, linkMap])
+
+  const onSkip = () => {
+    // localstorage 只能存储字符串，不要存储 true/false ， 否则会出现 'false' 却是 true 的场景
+    localStorage.setItem('hasReadWelcomes', 'yes')
+  }
 
   return (
     <div bg="#041616" h-screen flex flex-col items-stretch pb-16px>
@@ -69,7 +74,7 @@ export const WelcomeLayout: React.FC = () => {
       </main>
       <footer shrink-0 text-center text-32px text="#ab7a36" grid grid-cols-3 grid-rows-1>
         <Link style={{ gridArea: '1 / 2 / 2 / 3' }} to={linkMap[location.pathname]}>下一页</Link>
-        <Link style={{ gridArea: '1 / 3 / 2 / 4' }} to="/welcome/1">跳过</Link>
+        <Link style={{ gridArea: '1 / 3 / 2 / 4' }} to="/home" onClick={onSkip}>跳过</Link>
       </footer>
     </div>
   )
