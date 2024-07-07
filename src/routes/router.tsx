@@ -5,10 +5,11 @@ import { Welcome1 } from '../pages/Welcome1'
 import { Welcome2 } from '../pages/Welcome2'
 import { Welcome3 } from '../pages/Welcome3'
 import { Welcome4 } from '../pages/Welcome4'
+import { Home } from '../pages/Home'
 
 export const router = createBrowserRouter([
   { path: '/', element: <Root /> },
-  { path: '/home', element: <div>home</div> },
+  { path: '/home', element: <Home /> },
   {
     path: '/welcome',
     element: <WelcomeLayout />,
