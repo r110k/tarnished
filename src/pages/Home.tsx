@@ -1,10 +1,13 @@
+import { useDemoStore } from '../useDemoStore'
+
 export const Home: React.FC = () => {
+  const { count, add } = useDemoStore()
   return (
     <div text-6xl>
       Home Display zustand
-      <div>1</div>
+      <div>{count}</div>
       <div>
-        <button> +1 </button>
+        <button onClick={add}> +1 </button>
       </div>
     </div>
   )
