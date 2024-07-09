@@ -63,7 +63,7 @@ export const WelcomeLayout: React.FC = () => {
         <img w-64px h-62px src={logo} alt="这是一个可爱的猫猫logo" />
         <h1 text="#ab7a36" text-32px>褪色者啊，来这里吧</h1>
       </header>
-      <main ref={mainRef} flex-1 shrink-1 relative >
+      <main ref={mainRef} flex-1 shrink-1 relative overflow-hidden >
         {transitions((style, pathname) =>
             <animated.div key={pathname} style={{ ...style, ...extraStyle }}
               w="100%" h="100%" p-16px flex>
