@@ -5,6 +5,7 @@ import type { ReactNode } from 'react'
 
 import logo from '../assets/images/catLogo.svg'
 import { useSwipe } from '../hooks/useSwipe'
+import { useLocalStore } from '../stores/useLocalStore'
 
 interface extraStyleInterface {position: 'relative' | 'absolute' }
 
@@ -51,9 +52,9 @@ export const WelcomeLayout: React.FC = () => {
     }
   }, [direction, location.pathname, linkMap])
 
+  const { setHasReadWelcomes } = useLocalStore()
   const onSkip = () => {
-    // localstorage 只能存储字符串，不要存储 true/false ， 否则会出现 'false' 却是 true 的场景
-    localStorage.setItem('hasReadWelcomes', 'yes')
+    setHasReadWelcomes(true)
   }
 
   return (
