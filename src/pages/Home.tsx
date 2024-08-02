@@ -1,20 +1,18 @@
 import { useEffect } from 'react'
 import axios from 'axios'
+import useSWR from 'swr'
 import logo from '../assets/images/catLogo.svg'
 import addIcon from '../assets/icons/add.svg'
 
 export const Home: React.FC = () => {
-  useEffect(() => {
-    axios.get('http://152.32.233.140:3000/api/v1/me')
-      .then(() => {
-        axios.get('http://152.32.233.140:3000/api/v1/items')
-          .then((response) => {
-            if (response.data.resources.length > 0) {
-              console.log('需要删除掉')
-            }
-          }, () => {})
-      }, () => {})
+  const { data: meData, error: meError } = useSWR('/api/v1/me', (path) => {
+    return axios.get(`http://152.32.233.140:3000${path}`)
   })
+  const { data: itemsData, error: itemsError } = useSWR(meData ? '/api/v1/items' : null, (path) => {
+    return axios.get(`http://152.32.233.140:3000${path}`)
+  })
+
+  console.log(meData, meError, itemsData, itemsError)
 
   return <div>
     <div flex justify-center>
