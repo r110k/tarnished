@@ -1,17 +1,14 @@
-import { useEffect } from 'react'
-import axios from 'axios'
 import useSWR from 'swr'
 import logo from '../assets/images/catLogo.svg'
 import addIcon from '../assets/icons/add.svg'
+import { ajax } from '../lib/ajax'
 
 export const Home: React.FC = () => {
   const { data: meData, error: meError } = useSWR('/api/v1/me', (path) => {
-    // return axios.get(`http://152.32.233.140:3000${path}`)
-    return axios.get(path)
+    return ajax.get(path)
   })
   const { data: itemsData, error: itemsError } = useSWR(meData ? '/api/v1/items' : null, (path) => {
-    // return axios.get(`http://152.32.233.140:3000${path}`)
-    return axios.get(path)
+    return ajax.get(path)
   })
 
   console.log(meData, meError, itemsData, itemsError)
