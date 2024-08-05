@@ -3,12 +3,12 @@ export default [
   {
     url: '/api/v1/me',
     method: 'get',
-    response: () => {
+    timeout: 1000,
+    response: (): Resource<User> => {
       return {
         resource: {
           id: 1476,
           email: 'malcom.johnston@kreiger-rogahn.example',
-          name: null,
           created_at: '2024-07-30T12:23:16.982Z',
           updated_at: '2024-07-30T12:23:16.982Z',
         },
@@ -18,7 +18,8 @@ export default [
   {
     url: '/api/v1/items',
     method: 'get',
-    response: () => {
+    timeout: 1500,
+    response: (): Resources<Item> => {
       return {
         resources: [
           {
