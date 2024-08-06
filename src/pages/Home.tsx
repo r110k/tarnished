@@ -5,6 +5,7 @@ import { ajax } from '../lib/ajax'
 import { useTitle } from '../hooks/useTitle'
 import { Loading } from '../components/Loading'
 import { AddItemFloatButton } from '../components/AddItemFloatButton'
+import 'virtual:svgsprites'
 
 interface Props {
   title?: string
