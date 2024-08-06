@@ -21,6 +21,14 @@ export default [
     timeout: 1500,
     response: (): Resources<Item> => {
       return {
+        resources: [],
+        pager: {
+          page: 1,
+          per_page: 25,
+          total: 26,
+        },
+      }
+      return {
         resources: [
           {
             id: 4633,
