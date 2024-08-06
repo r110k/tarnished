@@ -15,4 +15,8 @@ declare module 'react' {
     rounded?: string
     fixed?: boolean
   }
+  interface SVGProps<T> extends SVGAttributes<T>, ClassAttributes<T> {
+    w?: string
+    h?: string
+  }
 }
