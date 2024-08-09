@@ -23,7 +23,7 @@ export const Home: React.FC<Props> = (props) => {
   const isLoadingMe = !meData && !meError
   const isLoadingItems = meData && !itemsData && !itemsError
   if (isLoadingMe || isLoadingItems) {
-    return <Loading />
+    return <Loading className='h-screen' message='褪色者啊，来这边...' />
   }
 
   if (itemsData?.resources[0]) {
