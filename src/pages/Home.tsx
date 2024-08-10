@@ -35,7 +35,7 @@ export const Home: React.FC<Props> = (props) => {
       <img mt-20vh mb-20vh width="128" height="125" src={logo} />
     </div>
     <div px-16px>
-      <button h-48px w="100%" b-none text-white bg="#041616" rounded-8px>开始记账</button>
+      <button g-btn>开始记账</button>
     </div>
     <AddItemFloatButton />
   </div>
