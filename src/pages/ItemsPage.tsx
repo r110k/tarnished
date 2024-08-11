@@ -4,6 +4,8 @@ import { AddItemFloatButton } from '../components/AddItemFloatButton'
 import type { TimeRage } from '../components/TimeRangePicker'
 import { TimeRangePicker } from '../components/TimeRangePicker'
 import { TopNav } from '../components/TopNav'
+import { TopMenu } from '../components/TopMenu'
+import { useMenuStore } from '../stores/useMenuStore'
 import { ItemsList } from './ItemsPage/ItemsList'
 import { ItemsSummary } from './ItemsPage/ItemsSummary'
 const Div = styled.div`
@@ -192,6 +194,7 @@ export const ItemsPage: React.FC = () => {
       ],
     },
   ])
+  const { visible } = useMenuStore()
   return (
     <div>
       <Div>
@@ -201,6 +204,7 @@ export const ItemsPage: React.FC = () => {
       <ItemsSummary />
       <ItemsList items={items} />
       <AddItemFloatButton />
+      { visible ? <TopMenu /> : null }
     </div>
   )
 }
