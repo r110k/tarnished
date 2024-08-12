@@ -1,8 +1,21 @@
+import axios from 'axios'
+import useSWRInfinite from 'swr/infinite'
 interface Props {
-  items: Item[]
 }
 
-export const ItemsList: React.FC<Props> = ({ items }) => {
+// Index 代表从 0 开始
+const getKey = (pageIndex: number) => {
+  return `/api/v1/items?page=${pageIndex + 1}`
+}
+export const ItemsList: React.FC<Props> = () => {
+  const { data, error } = useSWRInfinite(
+    // A function
+    getKey,
+    // fetcher,
+    async path => (await axios.get<Resources<Item>>(path)).data,
+  )
+  console.log(data, error)
+  const items: Item[] = []
   return (
     <div>
       <ol>
