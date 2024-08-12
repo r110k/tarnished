@@ -7,7 +7,7 @@ interface Menu {
 
 export const useMenuStore = create<Menu>((set, get) => (
   {
-    visible: false,
+    visible: true,
     setVisible: (visible) => {
       set({ visible })
     },
