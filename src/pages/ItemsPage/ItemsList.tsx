@@ -22,6 +22,7 @@ export const ItemsList: React.FC<Props> = () => {
     getKey,
     // fetcher,
     async path => (await axios.get<Resources<Item>>(path)).data,
+    { revalidateFirstPage: false },
   )
   const onLoadMore = () => {
     setSize(size + 1)
