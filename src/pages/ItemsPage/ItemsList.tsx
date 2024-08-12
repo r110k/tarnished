@@ -28,6 +28,9 @@ export const ItemsList: React.FC<Props> = () => {
   if (!data || error) {
     return <Loading />
   } else {
+    const lastPage = data[data.length - 1]
+    const { page, per_page, total } = lastPage.pager
+    const hasMore = (page - 1) * per_page + lastPage.resources.length < total
     return (
       <>
         <ol>
@@ -55,9 +58,11 @@ export const ItemsList: React.FC<Props> = () => {
             )
           }
         </ol>
-        <div p-16px>
-          <button onClick={onLoadMore} g-btn>加载更多...</button>
-        </div>
+        {hasMore
+          ? (<div p-16px text-center>
+            <button onClick={onLoadMore} g-btn>加载更多...</button>
+          </div>)
+          : <div p-16px text-center text-sm text-gray>没有更多了</div>}
       </>
     )
   }
