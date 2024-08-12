@@ -53,8 +53,10 @@ const createList = (n: number, attrs?: Partial<Item>): Item[] => {
 }
 
 const createResponse = ({ total = 10, perPage = 10, page = 1 }, attrs?: Partial<Item>): Resources<Item> => {
+  const sendCount = (page - 1) * perPage
+  const left = total - sendCount
   return {
-    resources: createList(perPage, attrs),
+    resources: left > 0 ? createList(Math.min(perPage, left), attrs) : [],
     pager: {
       page,
       per_page: perPage,
@@ -69,6 +71,6 @@ export const itemsMock: MockMethod = {
   statusCode: 200,
   timeout: 600,
   response: ({ query }: ResponseParams): Resources<Item> => {
-    return createResponse({ total: 20, perPage: 10, page: parseInt(query.page) || 1 })
+    return createResponse({ total: 13, perPage: 10, page: parseInt(query.page) || 1 })
   },
 }

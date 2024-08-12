@@ -6,7 +6,7 @@ import {
 export default defineConfig({
   theme: {},
   shortcuts: {
-    'g-btn': 'h-48px w-100% b-none text-white bg-#041616 rounded-8px',
+    'g-btn': 'h-48px w-100% b-none text-white bg-#041616 rounded-8px cursor-pointer',
   },
   safelist: [],
   presets: [
