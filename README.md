@@ -6,3 +6,6 @@ https://cssgrid-generator.netlify.app/
 
 ## 设计稿
 https://mastergo.com/
+
+## Fakerjs
+https://fakerjs.dev/api

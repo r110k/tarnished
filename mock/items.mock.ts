@@ -1,4 +1,5 @@
 import type { MockMethod } from 'vite-plugin-mock'
+import { faker } from '@faker-js/faker'
 
 let id = 0
 const createId = () => {
@@ -9,18 +10,18 @@ const createId = () => {
 const create = (attrs?: Partial<Item>): Item => {
   return {
     id: createId(),
-    user_id: 1471,
-    amount: 8712,
+    amount: faker.number.int({ min: 99, max: 100_0000_00 }),
     note: 'cumque',
-    happened_at: '2020-01-01T00:00:00.000Z',
+    happened_at: faker.date.past().toISOString(),
+    created_at: faker.date.past().toISOString(),
+    updated_at: faker.date.past().toISOString(),
+    kind: 'expenses',
+    deleted_at: null,
+    user_id: 1471,
     tag_ids: [
       7893,
       7894,
     ],
-    created_at: '2024-07-30T12:23:16.621Z',
-    updated_at: '2024-07-30T12:23:16.621Z',
-    kind: 'expenses',
-    deleted_at: null,
     tags: [
       {
         id: 7893,
@@ -28,8 +29,8 @@ const create = (attrs?: Partial<Item>): Item => {
         name: 'Vel.',
         sign: '😡',
         deleted_at: null,
-        created_at: '2024-07-30T12:23:16.503Z',
-        updated_at: '2024-07-30T12:23:16.503Z',
+        created_at: faker.date.past().toISOString(),
+        updated_at: faker.date.past().toISOString(),
         kind: 'expenses',
       },
       {
@@ -38,8 +39,8 @@ const create = (attrs?: Partial<Item>): Item => {
         name: 'Ut .',
         sign: '😂',
         deleted_at: null,
-        created_at: '2024-07-30T12:23:16.507Z',
-        updated_at: '2024-07-30T12:23:16.507Z',
+        created_at: faker.date.past().toISOString(),
+        updated_at: faker.date.past().toISOString(),
         kind: 'expenses',
       },
     ],
