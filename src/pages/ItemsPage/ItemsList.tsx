@@ -1,6 +1,7 @@
 import axios from 'axios'
 import useSWRInfinite from 'swr/infinite'
 import { Loading } from '../../components/Loading'
+import { Icon } from '../../components/Icon'
 interface Props {
 }
 
@@ -25,8 +26,20 @@ export const ItemsList: React.FC<Props> = () => {
   const onLoadMore = () => {
     setSize(size + 1)
   }
-  if (!data || error) {
-    return <Loading />
+
+  // 加载中最佳实践，既没有数据，又没有错误，并且处理加载中之前，要先处理错误
+  const isLoadingInitialData = !data && !error
+  const isLoadingMore = data?.[size - 1] === undefined && !error
+  const isLoading = isLoadingInitialData || isLoadingMore
+  if (!data) {
+    // 要区分是不是首屏数据请求（第一页就报错了）, 下面没有数据，又是错误，显然是第一屏的处理逻辑
+    return <>
+      {error && (<div flex flex-col items-center justify-center>
+        <Icon name="fail" className='w-60px h-60px text-red' />
+        <div p-16px text-center text-sm text-gray>没逝的没逝的，只是服务器炸了而已，只好请您隔一段时间再来访问了</div>
+      </div>)}
+      {isLoading && <Loading />}
+    </>
   } else {
     const lastPage = data[data.length - 1]
     const { page, per_page, total } = lastPage.pager
@@ -58,11 +71,17 @@ export const ItemsList: React.FC<Props> = () => {
             )
           }
         </ol>
-        {hasMore
-          ? (<div p-16px text-center>
+        {error && (<div flex flex-col items-center justify-center>
+          <Icon name="fail" className='w-60px h-60px text-red' />
+          <div p-16px text-center text-sm text-gray>没逝的没逝的，只是服务器炸了而已，只好请您隔一段时间再来访问了</div>
+        </div>)}
+        {!hasMore
+          ? <div p-16px text-center text-sm text-gray>没有更多了</div>
+          : isLoading
+            ? <Loading text-12px className='mt-16px'/>
+            : (<div p-16px text-center>
             <button onClick={onLoadMore} g-btn>加载更多...</button>
-          </div>)
-          : <div p-16px text-center text-sm text-gray>没有更多了</div>}
+          </div>)}
       </>
     )
   }
