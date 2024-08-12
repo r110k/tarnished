@@ -6,19 +6,18 @@ const Div = styled.div`
   @keyframes spin {
     0% { 
       transform: rotate(0deg);
-      animation-timing-function: ease-in;
+      animation-timing-function: cubic-bezier(0.55, 0.055, 0.675, 0.19);
     }
     75% {
-      transform: rotate(720deg);
-      animation-timing-function: linear;
+      transform: rotate(900deg);
+      animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
     }
     100% { 
-      transform: rotate(1080deg);
-      animation-timing-function: ease-out;
+      transform: rotate(1800deg);
     }
   }
   svg {
-    animation: spin 2.4s infinite; 
+    animation: spin 1.2s infinite; 
   }
 `
 interface Props {
