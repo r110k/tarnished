@@ -6,17 +6,18 @@ declare module 'react' {
     relative?: boolean
     grid?: boolean
     shadow?: boolean
-    text?: string 
-    before?: string 
-    after?: string 
+    text?: string
+    before?: string
+    after?: string
     bg?: string
     w?: string
     h?: string
     rounded?: string
-    fixed?: boolean
-    block?: boolean
     b?: string
     z?: string
+    fixed?: boolean
+    block?: boolean
+    'focus:shadow'?: boolean
   }
   interface SVGProps<T> extends SVGAttributes<T>, ClassAttributes<T> {
     w?: string
