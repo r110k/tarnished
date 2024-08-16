@@ -1,13 +1,16 @@
+import { useNavigate } from 'react-router-dom'
 import { Gradient } from '../components/Gradient'
 import { Icon } from '../components/Icon'
 import { TopNav } from '../components/TopNav'
 import { useSignInStore } from '../stores/useSignInStore'
-import { validate } from '../lib/validate'
+import { hasError, validate } from '../lib/validate'
+import { ajax } from '../lib/ajax'
 
 export const SignInPage: React.FC = () => {
   const { data, setData, error, setError } = useSignInStore()
+  const nav = useNavigate()
 
-  const onSubmit = (ev: React.FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (ev: React.FormEvent<HTMLFormElement>) => {
     ev.preventDefault()
 
     /**
@@ -25,6 +28,10 @@ export const SignInPage: React.FC = () => {
       { key: 'code', type: 'length', min: 6, max: 6, message: '验证码格式不正确' },
     ])
     setError(error)
+    if (!hasError(error)) {
+      await ajax.post('/api/v1/session', data)
+      nav('/home')
+    }
   }
 
   return (
@@ -59,3 +66,4 @@ export const SignInPage: React.FC = () => {
     </div>
   )
 }
+

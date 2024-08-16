@@ -31,3 +31,5 @@ interface Item {
   tags?: any[]
 }
 interface Tag {}
+
+type JSONValue = string | number | boolean | null | { [k: string]: JSONValue } | JSONValue[]
