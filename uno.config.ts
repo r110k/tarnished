@@ -11,7 +11,12 @@ export default defineConfig({
     'g-form': 'px-16px flex flex-col gap-y-24px children-flex children-flex-col',
     'g-form-label': 'text-18px mb-8px',
   },
-  safelist: [],
+  safelist: [
+
+  ],
+  rules: [
+    ['h-screen', { height: 'calc(100vh - var(--vh-offset, 0px))' }],
+  ],
   presets: [
     presetUno(),
     presetAttributify(),
