@@ -19,8 +19,8 @@ export const ItemsPage: React.FC = () => {
         <TopNav title="卢恩在哪" icon={
           <Icon name="menu" className='w-24px h-24px cursor-pointer' onClick={() => setVisible(!visible)} />
         } />
-        <TimeRangePicker selected={timeRange} onSelect={setTimeRange} />
       </Gradient>
+      <TimeRangePicker selected={timeRange} onSelect={setTimeRange} />
       <ItemsSummary />
       <ItemsList />
       <AddItemFloatButton />
