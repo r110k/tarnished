@@ -12,10 +12,9 @@ export default defineConfig({
     'g-form-label': 'text-18px mb-8px',
   },
   safelist: [
-
   ],
   rules: [
-    ['h-screen', { height: 'calc(100vh - var(--vh-offset, 0px))' }],
+    ['h-vhcheck', { height: 'calc(100vh - var(--vh-offset, 0px))' }],
   ],
   presets: [
     presetUno(),

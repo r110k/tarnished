@@ -16,8 +16,8 @@ export const Tags: React.FC<Props> = () => {
           </span>
           <span text-12px>新增标签</span>
         </li>
-        {tags.map(tag => (
-          <li w-48px flex justify-center items-center flex-col gap-y-8px>
+        {tags.map((tag, index) => (
+          <li key={index} w-48px flex justify-center items-center flex-col gap-y-8px>
             <span block w-48px h-48px rounded="24px" bg="[rgb(173,170,120)]"
               text-24px flex justify-center items-center
               b-1 b="[rgb(59,65,48)]">🚀</span>

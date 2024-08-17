@@ -18,7 +18,7 @@ const tabItems: {
 export const ItemsNewPage: React.FC = () => {
   const [tabItem, setTabItem] = useState<Item['kind']>('expenses')
   return (
-    <div h-screen flex flex-col className={s.itemsNewPage}>
+    <div h-vhcheck flex flex-col className={s.itemsNewPage}>
       <Gradient className="grow-0 shrink-0">
         <TopNav title="使用你的卢恩" icon={ <Icon name="back" /> } />
       </Gradient>
