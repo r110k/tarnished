@@ -5,6 +5,7 @@ import { Tabs } from '../components/Tabs'
 import { TopNav } from '../components/TopNav'
 import { Tags } from './ItemsNewPage/Tags'
 import s from './ItemsNewPage.module.scss'
+import { DateAndAmount } from './ItemsNewPage/DateAndAmount'
 
 const tabItems: {
   key: Item['kind']
@@ -17,12 +18,13 @@ const tabItems: {
 export const ItemsNewPage: React.FC = () => {
   const [tabItem, setTabItem] = useState<Item['kind']>('expenses')
   return (
-    <div className={s.itemsNewPage}>
-      <Gradient>
+    <div h-screen flex flex-col className={s.itemsNewPage}>
+      <Gradient className="grow-0 shrink-0">
         <TopNav title="使用你的卢恩" icon={ <Icon name="back" /> } />
       </Gradient>
       <Tabs tabItems={tabItems} value={tabItem} onChange={setTabItem}
-        className='text-center' classPrefix="itemsNewPageTabs"/>
+        className='text-center grow-1 shrink-1 overflow-hidden' classPrefix="itemsNewPageTabs"/>
+      <DateAndAmount className="grow-0 shrink-0" />
     </div>
   )
 }

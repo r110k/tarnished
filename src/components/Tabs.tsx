@@ -14,8 +14,8 @@ interface Props<T> {
 export const Tabs = <T extends string>(props: Props<T>) => {
   const { tabItems, value, onChange, className, classPrefix } = props
   return (
-    <div className={cs(className, classPrefix)}>
-      <ol className={classPrefix ? `${classPrefix}-menu` : ''} flex text-white children-px-24px children-py-12px
+    <div flex flex-col className={cs(className, classPrefix)}>
+      <ol grow-0 shrink-0 className={classPrefix ? `${classPrefix}-menu` : ''} flex text-white children-px-24px children-py-12px
         bg="[rgb(173,170,120)]">
         {tabItems.map(items => (<li key={items.key}
           className={
@@ -28,7 +28,7 @@ export const Tabs = <T extends string>(props: Props<T>) => {
           {items.text}
         </li>))}
       </ol>
-      <div className={classPrefix ? `${classPrefix}-pane` : ''}>
+      <div grow-1 shrink-1 overflow-auto className={classPrefix ? `${classPrefix}-pane` : ''}>
         {tabItems.filter(item => item.key === value)[0].element}
       </div>
     </div>
