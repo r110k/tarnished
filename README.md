@@ -9,3 +9,6 @@ https://mastergo.com/
 
 ## Fakerjs
 https://fakerjs.dev/api
+
+## Ico 生成
+https://favicon.io/favicon-generator/
