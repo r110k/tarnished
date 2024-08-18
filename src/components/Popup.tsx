@@ -48,7 +48,7 @@ export const Popup: React.FC<Props> = (props) => {
         z="[calc(var(--z-popup)-1)]">
       </animated.div>
       <animated.div fixed bottom-0 left-0 w-full min-h-100px bg-white
-        style={menuStyles}
+        style={menuStyles} rounded-t-8px
         z="[var(--z-popup)]">
           { children }
       </animated.div>

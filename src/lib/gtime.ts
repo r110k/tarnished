@@ -18,10 +18,10 @@ export const gtime = (p?: number | string | Date) => {
 }
 
 export class Gtime {
-  date: Date
+  #date: Date
 
   constructor(p?: number | string | Date) {
-    this.date = p ? new Date(p) : new Date()
+    this.#date = p ? new Date(p) : new Date()
   }
 
   /**
@@ -71,8 +71,12 @@ export class Gtime {
     return this
   }
 
+  get date() {
+    return new Date(this.#date)
+  }
+
   get timestamp() {
-    return this.date.getTime()
+    return this.#date.getTime()
   }
 
   get lastDayOfMonth() {
@@ -80,13 +84,13 @@ export class Gtime {
   }
 
   get parts(): Parts {
-    const year = this.date.getFullYear()
-    const month = this.date.getMonth() + 1
-    const day = this.date.getDate()
-    const hours = this.date.getHours()
-    const minutes = this.date.getMinutes()
-    const seconds = this.date.getSeconds()
-    const ms = this.date.getMilliseconds()
+    const year = this.#date.getFullYear()
+    const month = this.#date.getMonth() + 1
+    const day = this.#date.getDate()
+    const hours = this.#date.getHours()
+    const minutes = this.#date.getMinutes()
+    const seconds = this.#date.getSeconds()
+    const ms = this.#date.getMilliseconds()
 
     return { year, month, day, hours, minutes, seconds, ms }
   }
@@ -107,7 +111,7 @@ export class Gtime {
       const k = key as keyof typeof p
       const methodName = table[k]
       value = (k === 'month' ? value - 1 : value)
-      this.date[methodName](value)
+      this.#date[methodName](value)
     })
   }
 

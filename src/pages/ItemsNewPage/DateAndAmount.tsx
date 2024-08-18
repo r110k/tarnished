@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Icon } from '../../components/Icon'
 import { usePopup } from '../../hooks/usePopup'
 import { Datepicker } from '../../components/Datepicker'
+import { gtime } from '../../lib/gtime'
 
 interface Props {
   className?: string
@@ -10,8 +11,12 @@ interface Props {
 export const DateAndAmount: React.FC<Props> = (props) => {
   const { className } = props
 
-  const { popup, toggle } = usePopup(true,
-    <Datepicker onChange={d => console.log(d)}/>,
+  const [date, setDate] = useState(new Date())
+  const { popup, toggle, hide } = usePopup(false,
+    <Datepicker 
+      onCancel={() => hide()}
+      onConfirm={d => {setDate(d); hide()}}
+    />,
   )
   const onClickDate = () => { toggle() }
   return (
@@ -21,7 +26,7 @@ export const DateAndAmount: React.FC<Props> = (props) => {
           <span flex grow-0 shrink-0 flex-gap-8px items-center
             onClick={onClickDate}>
             <Icon name="calendar" className='w-24px h-24px text-[rgb(59,65,48)]' />
-            <span text-12px text="#999">2024-08-17</span>
+            <span text="#999">{gtime(date).format()}</span>
           </span>
           <code grow-1 shrink-1 text-right color="#53a867">123456789.01</code>
         </div>
