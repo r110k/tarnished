@@ -22,18 +22,28 @@ export const DateAndAmount: React.FC<Props> = (props) => {
       if (isTouching) {
         const y = e.touches[0].clientY
         const dy = y - lastY
-        setTranslateY(translateY + dy)
+        const currentY = translateY + dy
+        setTranslateY(currentY)
         setLastY(y)
       }
     }}
     onTouchEnd={() => {
+      const remainder = translateY % 36
+      if (remainder !== 0) {
+        // 过一段时间肯定看不懂，简述一下逻辑，如果滑动距离不是36的整数倍，我们取余，先调整滑动距离至整数倍，然后根据滑动距离调整到下一个36的整数倍或者上一个
+        let adjustment = -remainder
+        if (Math.abs(remainder) > 18) {
+          adjustment += (36 * (remainder > 0 ? 1 : -1))
+        }
+        setTranslateY(translateY + adjustment)
+      }
       setIsTouching(false)
     }}
   >
     <div b-2 b-yellow absolute h-36px top="[calc(50%-18px)]" w-full></div>
-    <div b-1 b-red absolute h-50px top="[calc(50%-25px)]" w-full>
+    <div b-1 b-red absolute h-36px top="[calc(50%-18px-360px)]" w-full>
       <ol style={{ transform: `translateY(${translateY}px)` }}
-        children-h-24px text-center>
+        children-h-36px text-center children-leading-36px>
         <li>1990</li>
         <li>1991</li>
         <li>1992</li>
