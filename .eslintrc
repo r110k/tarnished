@@ -5,6 +5,7 @@
     "consistent-return": "off",
     "no-empty": "off",
     "no-useless-return": "off",
+    "@typescript-eslint/no-use-before-define": "off",
     "@typescript-eslint/brace-style": ["error", "1tbs", { "allowSingleLine": true }],
     "@typescript-eslint/consistent-type-definitions":"off",
     "@typescript-eslint/no-unused-vars": [
