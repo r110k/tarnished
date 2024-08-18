@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { gtime } from '../lib/gtime'
 
 type Props = {
@@ -44,10 +44,14 @@ type ColumnProps = {
 }
 export const Column: React.FC<ColumnProps> = (props) => {
   const { itemHeight = 36, className, items, value, onChange    } = props
-  const yearIndex = items.indexOf(value)
+  useEffect(() => {
+    const index = items.indexOf(value)
+    setTranslateY(index * -itemHeight)
+  }, [value])
   const [isTouching, setIsTouching] = useState(false)
   const [lastY, setLastY] = useState(-1)
-  const [translateY, _setTranslateY] = useState(yearIndex * -itemHeight)
+  const index = items.indexOf(value)
+  const [translateY, _setTranslateY] = useState(index * -itemHeight)
   const setTranslateY = (y: number) => {
     if (y > 0) { y = 0 }
     y = Math.min(y, 0)
