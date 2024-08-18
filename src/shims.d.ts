@@ -4,8 +4,12 @@ declare module 'react' {
   interface HTMLAttributes<T> extends AriaAttributes, DOMAttributes<T> {
     flex?: boolean
     relative?: boolean
+    absolute?: boolean
     grid?: boolean
     shadow?: boolean
+    fixed?: boolean
+    block?: boolean
+    'focus:shadow'?: boolean
     text?: string
     before?: string
     after?: string
@@ -15,9 +19,7 @@ declare module 'react' {
     rounded?: string
     b?: string
     z?: string
-    fixed?: boolean
-    block?: boolean
-    'focus:shadow'?: boolean
+    top?: string
   }
   interface SVGProps<T> extends SVGAttributes<T>, ClassAttributes<T> {
     w?: string
