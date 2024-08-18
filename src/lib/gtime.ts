@@ -44,7 +44,7 @@ export class Gtime {
     return (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0
   }
 
-  getCurrentYearDaysCount() {
+  get currentYearDaysCount() {
     if (this.isLeapYear()) {
       return 366
     }
@@ -73,6 +73,10 @@ export class Gtime {
 
   get timestamp() {
     return this.date.getTime()
+  }
+
+  get lastDayOfMonth() {
+    return new Gtime(new Date(this.year, this.month - 1 + 1, 0))
   }
 
   get parts(): Parts {

@@ -11,7 +11,7 @@ export const DateAndAmount: React.FC<Props> = (props) => {
   const { className } = props
 
   const { popup, toggle } = usePopup(true,
-    <Datepicker />,
+    <Datepicker onChange={d => console.log(d)}/>,
   )
   const onClickDate = () => { toggle() }
   return (
