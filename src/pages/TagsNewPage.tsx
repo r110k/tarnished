@@ -21,7 +21,7 @@ export const TagsNewPage: React.FC = () => {
               )}
             </div>
             <div>
-              { emojis.map(({ name, chars }) => <div style={{ display: name === emojiKind ? '' : 'none' }}>{ chars }</div>)}
+              { emojis.map(({ name, chars }) => <div style={{ display: name === emojiKind ? '' : 'none' }} key={ name }>{ chars }</div>)}
             </div>
           </div>
         </div>
