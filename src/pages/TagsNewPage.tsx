@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { emojis } from '../lib/emojis'
 
 export const TagsNewPage: React.FC = () => {
+  // console.log(JSON.stringify(emojis))
   const [emojiKind, setEmojiKind] = useState('表情')
   const onSubmit = () => {}
   return (
