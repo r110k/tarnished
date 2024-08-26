@@ -1,7 +1,8 @@
+import type { ReactNode } from 'react'
 import { EmojiInput } from './Input/EmojiInput'
 
 type Props = {
-  label: string
+  label: string | ReactNode
   placeholder?: string
   type?: 'text' | 'emoji' | 'sms_code'
   value?: string
@@ -15,7 +16,7 @@ export const Input: React.FC<Props> = (props) => {
   const renderInput = () => {
     switch (type) {
       case 'emoji':
-        return <EmojiInput />
+        return <EmojiInput value={value} onChange={value => onChange?.(value)} />
       case 'text':
         return <input g-input-text type={type} placeholder={placeholder || '请输入'}
           value={value} onChange={e => onChange?.(e.target.value)} />
