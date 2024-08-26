@@ -30,6 +30,15 @@ interface Item {
   kind: 'expenses' | 'income'
   tags?: any[]
 }
-interface Tag {}
+interface Tag {
+  id: number
+  user_id: number
+  name: string
+  sign: string
+  deleted_at?: string 
+  created_at: string
+  updated_at: string
+  kind: Item['kind']
+}
 
 type JSONValue = string | number | boolean | null | { [k: string]: JSONValue } | JSONValue[]

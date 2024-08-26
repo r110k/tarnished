@@ -22,14 +22,14 @@ export const SignInPage: React.FC = () => {
      *  { code: ['请输入验证码', '验证码地址不正确'] },
      * ]
      */
-    const error = validate(data, [
+    const newError = validate(data, [
       { key: 'email', type: 'required', message: '请输入邮箱地址' },
       { key: 'email', type: 'pattern', regex: /^.+@.+$/, message: '邮箱地址格式不正确' },
       { key: 'code', type: 'required', message: '请输入验证码' },
       { key: 'code', type: 'length', min: 6, max: 6, message: '验证码格式不正确' },
     ])
-    setError(error)
-    if (!hasError(error)) {
+    setError(newError)
+    if (!hasError(newError)) {
       await ajax.post('/api/v1/session', data)
       nav('/home')
     }
@@ -47,10 +47,10 @@ export const SignInPage: React.FC = () => {
         <h1 text-32px font-bold text="#3B4130">tarnished...</h1>
       </div>
       <form g-form onSubmit={onSubmit}>
-        <Input label="邮箱地址：" placeholder="请输入邮箱，然后点击发送验证码" value={data.email} onChange={val => setData({ email: val })}
-          error={error.email?.[0]} />
-        <Input type='sms_code' label="验证码：" placeholder="请输入验证码" value={data.code} onChange={val => setData({ code: val })}
-          error={error.code?.[0]} />
+        <Input label="邮箱地址：" placeholder="请输入邮箱，然后点击发送验证码" value={data.email}
+          onChange={email => setData({ email })} error={error.email?.[0]} />
+        <Input type='sms_code' label="验证码：" placeholder="请输入验证码" value={data.code}
+          onChange={code => setData({ code })} error={error.code?.[0]} />
         <div mt-100px>
           <button g-btn type="submit">登陆</button>
         </div>
