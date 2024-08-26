@@ -49,14 +49,8 @@ export const SignInPage: React.FC = () => {
       <form g-form onSubmit={onSubmit}>
         <Input label="邮箱地址：" placeholder="请输入邮箱，然后点击发送验证码" value={data.email} onChange={val => setData({ email: val })}
           error={error.email?.[0]} />
-        <div>
-          <span g-form-label>验证码：{ error.code?.[0] && <span text-red>{error.code[0]}</span>}</span>
-          <div flex gap-x-16px>
-            <input max-w="[calc(40%-8px)]" g-input-text type="text" placeholder='请输入验证码'
-              value={data.code} onChange={e => setData({ code: e.target.value })} />
-            <button shrink-0 max-w="[calc(60%-8px)]" g-btn>发送验证码</button>
-          </div>
-        </div>
+        <Input type='sms_code' label="验证码：" placeholder="请输入验证码" value={data.code} onChange={val => setData({ code: val })}
+          error={error.code?.[0]} />
         <div mt-100px>
           <button g-btn type="submit">登陆</button>
         </div>
