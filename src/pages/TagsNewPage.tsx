@@ -3,6 +3,7 @@ import { emojis } from '../lib/emojis'
 import { Gradient } from '../components/Gradient'
 import { Icon } from '../components/Icon'
 import { TopNav } from '../components/TopNav'
+import { Input } from '../components/Input'
 import s from './TagsNewPage.module.scss'
 
 export const TagsNewPage: React.FC = () => {
@@ -15,11 +16,8 @@ export const TagsNewPage: React.FC = () => {
         <TopNav title="挑选一个 Emoji" icon={<Icon name="back" />} />
       </Gradient>
       <form onSubmit={onSubmit} px-16px py-32px g-form>
-        <div flex flex-col gap-y-8px>
-          <span text-18px g-form-label>标签名</span>
-          <input g-input-text type="text" />
-          <span text-14px text-red>标签名字太长</span>
-        </div>
+        <Input label='标签名' error='标签名太长' placeholder='请输入标签' />
+        <Input label={'符号 😋'} type='emoji' />
         <div flex flex-col gap-y-8px>
           <span text-18px>符号 <span text-24px>😋</span></span>
           <div b-1 b="[rgb(59,65,48)]" rounded-8px>
