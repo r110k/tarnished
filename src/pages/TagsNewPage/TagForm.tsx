@@ -1,0 +1,56 @@
+import type { FormEventHandler } from 'react'
+import { useEffect } from 'react'
+import { useParams, useSearchParams } from 'react-router-dom'
+import { hasError, validate } from '../../lib/validate'
+import { useCreateTagStore } from '../../stores/useCreateTagStore'
+import { Input } from '../../components/Input'
+
+type Props = {
+  type: 'create' | 'edit'
+}
+
+export const TagForm: React.FC<Props> = (props) => {
+  const { type } = props
+  const { data, setData, error, setError } = useCreateTagStore()
+  const [searchParams] = useSearchParams()
+  useEffect(() => {
+    if (type !== 'create') { return }
+    const kind = searchParams.get('kind')
+    if (!kind) { throw new Error('kind 必填') }
+    if (kind !== 'expenses' && kind !== 'income') { throw new Error('kind 只能是 expenses 或者 income') }
+    setData({ kind })
+  }, [searchParams])
+  const params = useParams()
+  useEffect(() => {
+    if (type !== 'edit') { return }
+    const id = params.id
+    if (!id) { throw new Error('id 必填') }
+    // Ajax
+    console.log(id)
+  }, [])
+  const onSubmit: FormEventHandler = (event) => {
+    event.preventDefault()
+    const newError = validate(data, [
+      { key: 'kind', type: 'required', message: 'kind 必填' },
+      { key: 'name', type: 'required', message: 'name 必填' },
+      { key: 'name', type: 'length', max: 12, message: 'name 长度不能大于12' },
+      { key: 'sign', type: 'required', message: 'sign 必填' },
+    ])
+    setError(newError)
+    if (!hasError(newError)) {
+      // console.log('没有错')
+    }
+  }
+  return (
+    <form onSubmit={onSubmit} g-form p-16px p-t-32px>
+      <Input label='标签名' placeholder='请输入标签' error={error.name?.[0]}
+        value={data.name} onChange={name => setData({ name })} />
+      <Input label={<span leading-24px>符号 <span text-24px>{data.sign}</span></span>} type='emoji' error={error.sign?.[0]}
+        value={data.sign} onChange={sign => setData({ sign })} />
+      <p text-center p-b-24px>记账时长按标签，即可进行编辑</p>
+      <div>
+        <button g-btn>确定</button>
+      </div>
+    </form>
+  )
+}
