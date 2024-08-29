@@ -6,7 +6,7 @@ type Props = {
   items: { x: string | number ; y: number }[]
 }
 
-export const LineCharts: React.FC<Props> = (props) => {
+export const LineChart: React.FC<Props> = (props) => {
   const { className, items } = props
   const divRef = useRef<HTMLDivElement>(null)
 

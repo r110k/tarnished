@@ -4,8 +4,9 @@ import { Icon } from '../components/Icon'
 import type { TimeRage } from '../components/TimeRangePicker'
 import { TimeRangePicker } from '../components/TimeRangePicker'
 import { TopNav } from '../components/TopNav'
-import { LineCharts } from '../components/LineCharts'
-import { PieCharts } from '../components/PieCharts'
+import { LineChart } from '../components/LineChart'
+import { PieChart } from '../components/PieChart'
+import { RankChart } from '../components/RankChart'
 
 export const StatisticsPage: React.FC = () => {
   const [timeRange, setTimeRange] = useState<TimeRage>('thisMonth')
@@ -45,13 +46,15 @@ export const StatisticsPage: React.FC = () => {
   ].map(({ happened_at, amount }) => ({ x: happened_at, y: amount }))
 
   const items2 = [
-    { tag: '吃饭', amount: 160000 },
-    { tag: '买衣服', amount: 60000 },
-    { tag: '氪金', amount: 64800 },
-    { tag: '打车', amount: 50000 },
-    { tag: '加油', amount: 40000 },
-    { tag: '房租', amount: 399900 },
-  ].map(({ tag, amount }) => ({ x: tag, y: amount }))
+    { tag: { name: '吃饭', sign: '🥨' }, amount: 160000 },
+    { tag: { name: '买衣服', sign: '👕' }, amount: 60000 },
+    { tag: { name: '氪金', sign: '🎉' }, amount: 64800 },
+    { tag: { name: '打车', sign: '🚕' }, amount: 50000 },
+    { tag: { name: '加油', sign: '🛢' }, amount: 40000 },
+    { tag: { name: '房租', sign: '⛺' }, amount: 399900 },
+  ]
+  const items3 = items2.map(({ tag, amount }) => ({ x: tag.name, y: amount }))
+  const items4 = items2.map(({ tag, amount }) => ({ name: tag.name, sign: tag.sign, amount }))
 
   return (
     <div>
@@ -61,8 +64,9 @@ export const StatisticsPage: React.FC = () => {
         } />
       </Gradient>
       <TimeRangePicker selected={timeRange} onSelect={setTimeRange} />
-      <LineCharts className='h-160px' items={items} />
-      <PieCharts className='h-260px mt-24px' items={items2} />
+      <LineChart className='h-160px' items={items} />
+      <PieChart className='h-260px mt-24px' items={items3} />
+      <RankChart className='h-260px mt-24px' items={items4}/>
     </div>
   )
 }

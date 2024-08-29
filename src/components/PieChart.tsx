@@ -6,7 +6,7 @@ type Props = {
   items: { x: string | number ; y: number }[]
 }
 
-export const PieCharts: React.FC<Props> = (props) => {
+export const PieChart: React.FC<Props> = (props) => {
   const { className, items } = props
   const divRef = useRef<HTMLDivElement>(null)
 
@@ -20,7 +20,7 @@ export const PieCharts: React.FC<Props> = (props) => {
         {
           name: 'Access From',
           type: 'pie',
-          radius: '50%',
+          radius: '85%',
           data: items?.map(item => ({ value: item.y, name: item.x })),
           emphasis: {
             itemStyle: {
