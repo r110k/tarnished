@@ -11,7 +11,7 @@ type Props = {
 } & (
   | { type: 'text' }
   | { type: 'emoji' }
-  | { type: 'sms_code' }
+  | { type: 'sms_code'; onClick: () => void }
   | { type: 'select'; options: { value: string; text: string }[] }
 )
 
@@ -31,7 +31,7 @@ export const Input: React.FC<Props> = (props) => {
           <div flex gap-x-16px>
             <input max-w="[calc(40%-8px)]" g-input-text type="text" placeholder={placeholder}
               value={value} onChange={e => onChange?.(e.target.value)} />
-            <button shrink-0 max-w="[calc(60%-8px)]" g-btn>发送验证码</button>
+            <button type="button" onClick={props.onClick} shrink-0 max-w="[calc(60%-8px)]" g-btn>发送验证码</button>
           </div>
         )
       case 'select':

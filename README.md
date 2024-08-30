@@ -20,7 +20,10 @@ https://favicon.io/favicon-generator/
 跟渲染无关的尽量使用 ref
 
 ## 技巧
-### 选中多行，cmd+shift+P 输入 emmet w， button* 可以使用 button 标签包裹多行
+选中多行，cmd+shift+P 输入 emmet w， button* 可以使用 button 标签包裹多行
+
+## Form
+form 标签中的 button 如果没有 type， 默认 type 是 submit
 
 ## 处理时间
 1. moment.js 体积太大
