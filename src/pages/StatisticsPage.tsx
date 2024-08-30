@@ -54,10 +54,10 @@ export const StatisticsPage: React.FC = () => {
     { tag: { name: '房租', sign: '⛺' }, amount: 399900 },
   ]
   const items3 = items2.map(({ tag, amount }) => ({ x: tag.name, y: amount }))
-  const items4 = items2.map(({ tag, amount }) => ({ name: tag.name, sign: tag.sign, amount }))
+  const items4 = items2.map(({ tag, amount }) => ({ name: tag.name, sign: tag.sign, amount })).sort((a, b) => b.amount - a.amount)
 
   return (
-    <div>
+    <div pb-16px>
       <Gradient>
         <TopNav title="统计图表" icon={
           <Icon name="back" className='w-24px h-24px cursor-pointer' />
@@ -66,7 +66,7 @@ export const StatisticsPage: React.FC = () => {
       <TimeRangePicker selected={timeRange} onSelect={setTimeRange} />
       <LineChart className='h-160px' items={items} />
       <PieChart className='h-260px mt-24px' items={items3} />
-      <RankChart className='h-260px mt-24px' items={items4}/>
+      <RankChart className='my-24px' items={items4}/>
     </div>
   )
 }
