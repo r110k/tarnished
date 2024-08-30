@@ -44,10 +44,10 @@ export const SignInPage: React.FC = () => {
     ])
     setError(newError)
     if (!hasError(newError)) {
-      const response = await axios.post('http://152.32.233.140:3000/api/v1/validation_codes', {
-        email: data.email,
-      })
-      console.log(`没有错误, 请求结果=${JSON.stringify(response)}`)
+      // const response = await axios.post('http://152.32.233.140:3000/api/v1/validation_codes', {
+      //   email: data.email,
+      // })
+      // console.log(`没有错误, 请求结果=${JSON.stringify(response)}`)
     }
   }
 
