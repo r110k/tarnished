@@ -78,3 +78,39 @@ JSON.stringify(result)
 描述: 这是一个全角空格字符，主要在东亚语言（如中文、日文、韩文）的排版中使用。它的宽度等于一个全角字符的宽度，是普通空格（半角空格）宽度的两倍。在需要更大间隔或者遵循特定排版规则时使用，比如在中文文章中用于句子之间的分隔，以保持版面的清晰和美观。
 总结来说，这三种空格各有其特定的应用场景：\u00A0用于防止内容因换行而中断的场合，\u0020是最基本的文本间隔符，而\u3000则主要服务于东亚语言的排版需求。
 ```
+
+## 倒计时
+```javascript
+import { useEffect, useRef, useState } from "react";
+
+export default function App() {
+  const [count, setNextCount] = useState(10);
+  const [counting, setNextCounting] = useState(false);
+
+  useEffect(() => {
+    if (counting) {
+      if (count === 0) {
+        setNextCounting(false);
+        return;
+      }
+      const timer = setTimeout(() => {
+        setNextCount(count - 1);
+        console.log(count);
+      }, 800);
+      return () => {
+        window.clearInterval(timer);
+      };
+    }
+  }, [counting, count]);
+  const start = () => {
+    setNextCounting(true);
+  };
+  return (
+    <div className="App">
+      <h1>倒计时: {count}</h1>
+      <h1>{counting ? "倒计时中" : "没有倒计时"}</h1>
+      <button onClick={start}>开始</button>
+    </div>
+  );
+}
+```
