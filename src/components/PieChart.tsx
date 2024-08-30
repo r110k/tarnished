@@ -9,9 +9,10 @@ type Props = {
 export const PieChart: React.FC<Props> = (props) => {
   const { className, items } = props
   const divRef = useRef<HTMLDivElement>(null)
-
+  const initialized = useRef(false)
   useEffect(() => {
     if (!divRef.current) { return }
+    if (initialized.current) { return }
     const myChart = echarts.init(divRef.current)
     const option: echarts.EChartsOption = {
       tooltip: { trigger: 'item' },
@@ -33,6 +34,7 @@ export const PieChart: React.FC<Props> = (props) => {
       ],
     }
     myChart.setOption(option)
+    initialized.current = true
   }, [])
   return (
     <div ref={divRef} className={className}></div>

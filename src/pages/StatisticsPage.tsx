@@ -7,9 +7,11 @@ import { TopNav } from '../components/TopNav'
 import { LineChart } from '../components/LineChart'
 import { PieChart } from '../components/PieChart'
 import { RankChart } from '../components/RankChart'
+import { Input } from '../components/Input'
 
 export const StatisticsPage: React.FC = () => {
   const [timeRange, setTimeRange] = useState<TimeRage>('thisMonth')
+  const [x, setX] = useState('expenses')
 
   const items = [
     { happened_at: '2021-12-01', amount: 5000 },
@@ -64,6 +66,11 @@ export const StatisticsPage: React.FC = () => {
         } />
       </Gradient>
       <TimeRangePicker selected={timeRange} onSelect={setTimeRange} />
+      <div flex p-16px items-center>
+        <span grow-0 shrink-0>类型：</span>
+        <div grow-1 shrink-1><Input type="select" options={[{ value: 'income', text: '收入' }, { value: 'expenses', text: '支出' }]}
+        value={x} onChange={value => setX(value)} disableError={true} /></div>
+      </div>
       <LineChart className='h-160px' items={items} />
       <PieChart className='h-260px mt-24px' items={items3} />
       <RankChart className='my-24px' items={items4}/>

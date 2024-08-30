@@ -13,6 +13,12 @@ https://fakerjs.dev/api
 ## Ico 生成
 https://favicon.io/favicon-generator/
 
+## 消除 key 警告
+使用 index 做标签 key 会在删除的场景有问题
+
+## 关于 ref 
+跟渲染无关的尽量使用 ref
+
 ## 技巧
 ### 选中多行，cmd+shift+P 输入 emmet w， button* 可以使用 button 标签包裹多行
 
