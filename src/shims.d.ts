@@ -2,25 +2,28 @@ import * as React from 'react'
 
 declare module 'react' {
   interface HTMLAttributes<T> extends AriaAttributes, DOMAttributes<T> {
-    truncate?: boolean
     flex?: boolean
+    grid?: boolean
+    block?: boolean
+    fixed?: boolean
     relative?: boolean
     absolute?: boolean
-    grid?: boolean
+    truncate?: boolean
     shadow?: boolean
-    fixed?: boolean
-    block?: boolean
     'focus:shadow'?: boolean
+    w?: string
+    h?: string
+    b?: string
+    z?: string
+    bg?: string
+    top?: string
+    right?: string
+    bottom?: string
+    left?: string
+    rounded?: string
     text?: string
     before?: string
     after?: string
-    bg?: string
-    w?: string
-    h?: string
-    rounded?: string
-    b?: string
-    z?: string
-    top?: string
   }
   interface SVGProps<T> extends SVGAttributes<T>, ClassAttributes<T> {
     w?: string

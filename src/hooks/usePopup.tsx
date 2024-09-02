@@ -4,10 +4,16 @@ import ReactDOM from 'react-dom'
 import { Popup } from '../components/Popup'
 import { rootDiv } from '../main'
 
-export const usePopup = (initialVisible: boolean, children: ReactNode) => {
+type Options = {
+  initialVisible?: boolean
+  children: ReactNode
+  position?: 'bottom' | 'center'
+}
+
+export const usePopup = ({ initialVisible = false, children, position }: Options) => {
   const [visible, setVisible] = useState(initialVisible)
   const popup = ReactDOM.createPortal(
-      <Popup visible={visible} onClickMask={() => setVisible(false)}>
+      <Popup visible={visible} onClickMask={() => setVisible(false)} position={position}>
         { children }
       </Popup>,
       rootDiv,
