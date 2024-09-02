@@ -14,7 +14,11 @@ export const Home: React.FC<Props> = (props) => {
   useTitle(props.title)
 
   const { data: meData, error: meError } = useSWR('/api/v1/me', async path =>
-    (await ajax.get<Resource<User>>(path)).data.resource,
+    (await ajax.get<Resource<User>>(path, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('jwt')}`,
+      },
+    })).data.resource,
   )
   const { data: itemsData, error: itemsError } = useSWR(meData ? '/api/v1/items' : null, async path =>
     (await ajax.get<Resources<Item>>(path)).data,

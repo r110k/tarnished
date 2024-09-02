@@ -1,9 +1,11 @@
 import { useNavigate } from 'react-router-dom'
+import type { AxiosError } from 'axios'
 import axios from 'axios'
 import { Gradient } from '../components/Gradient'
 import { Icon } from '../components/Icon'
 import { TopNav } from '../components/TopNav'
 import { useSignInStore } from '../stores/useSignInStore'
+import type { FormError } from '../lib/validate'
 import { hasError, validate } from '../lib/validate'
 import { ajax } from '../lib/ajax'
 import { Input } from '../components/Input'
@@ -11,6 +13,12 @@ import { Input } from '../components/Input'
 export const SignInPage: React.FC = () => {
   const { data, setData, error, setError } = useSignInStore()
   const nav = useNavigate()
+
+  const onSubmitError = (err: AxiosError<{ errors: FormError<typeof data> }>) => {
+    console.error(err.response?.data)
+    setError(err.response?.data?.errors ?? {}) // expect set error to validation code but set to email
+    throw err
+  }
 
   const onSubmit = async (ev: React.FormEvent<HTMLFormElement>) => {
     ev.preventDefault()
@@ -31,7 +39,10 @@ export const SignInPage: React.FC = () => {
     ])
     setError(newError)
     if (!hasError(newError)) {
-      await ajax.post('/api/v1/session', data)
+      const response = await ajax.post<{ jwt: string }>('http://152.32.233.140:3000/api/v1/session', data)
+        .catch(onSubmitError)
+      const jwt = response.data.jwt
+      localStorage.setItem('jwt', jwt)
       nav('/home')
     }
   }
@@ -43,17 +54,14 @@ export const SignInPage: React.FC = () => {
       { key: 'email', type: 'pattern', regex: /^.+@.+$/, message: '邮箱地址格式不正确' },
     ])
     setError(newError)
-    if (hasError(newError)) {
-      console.log(有错)
-      return
-    }
+    if (hasError(newError)) { return }
     // const response = await axios.post('http://152.32.233.140:3000/api/v1/validation_codes', {
     //   email: data.email,
     // })
     const response = await axios.post('/api/v1/validation_codes', {
       email: data.email,
     })
-    console.log(`没有错误, 请求结果=${JSON.stringify(response)}`)
+    // console.log(`没有错误, 请求结果=${JSON.stringify(response)}`)
     return response
   }
 
@@ -69,7 +77,7 @@ export const SignInPage: React.FC = () => {
         <h1 text-32px font-bold text="#3B4130">tarnished...</h1>
       </div>
       <form g-form onSubmit={onSubmit}>
-        <Input label="邮箱地址：" placeholder="请输入邮箱，然后点击发送验证码" value={data.email}
+        <Input type="text" label="邮箱地址：" placeholder="请输入邮箱，然后点击发送验证码" value={data.email}
           onChange={email => setData({ email })} error={error.email?.[0]} />
         <Input type='sms_code' label="验证码：" placeholder="请输入验证码" value={data.code}
           error={error.code?.[0]} onChange={code => setData({ code })} request={sendSmsCode} />
