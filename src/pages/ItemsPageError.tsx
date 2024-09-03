@@ -1,11 +1,12 @@
 import { Navigate, useRouteError } from 'react-router-dom'
+import { ErrorEmptyData, ErrorUnauthorized } from '../errors'
 
 export const ItemsPageError: React.FC = () => {
   const error = useRouteError()
   const e = error as Error
-  if (e.message === 'unauthorized') {
+  if (e instanceof ErrorUnauthorized) {
     return <Navigate to="sign_in" />
-  } else if (e.message === 'empty_data') {
+  } else if (e instanceof ErrorEmptyData) {
     return <Navigate to="home" />
   } else {
     return <div>其他错误 </div>

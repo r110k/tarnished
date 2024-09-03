@@ -15,6 +15,7 @@ import { TagsNewPage } from '../pages/TagsNewPage'
 import { TagsEditPage } from '../pages/TagsEditPage'
 import { StatisticsPage } from '../pages/StatisticsPage'
 import { ItemsPageError } from '../pages/ItemsPageError'
+import { ErrorEmptyData, ErrorUnauthorized } from '../errors'
 
 export const router = createBrowserRouter([
   { path: '/', element: <Root /> },
@@ -38,7 +39,7 @@ export const router = createBrowserRouter([
         if (error.response) {
           const { status } = error.response
           if (status === 401) {
-            throw new Error('unauthorized')
+            throw new ErrorUnauthorized()
           }
         }
         throw error
@@ -50,7 +51,7 @@ export const router = createBrowserRouter([
         return response.data
       } else {
         // 如果没数据就加载首页, 注意这里不能返回空，空也会被认定为有数据
-        throw new Error('empty_data')
+        throw new ErrorEmptyData()
       }
     },
   },
