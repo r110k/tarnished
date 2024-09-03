@@ -1,5 +1,6 @@
-import type { AxiosRequestConfig } from 'axios'
+import type { AxiosError, AxiosRequestConfig } from 'axios'
 import axios from 'axios'
+import { useNavigate } from 'react-router-dom'
 import { useLoadingStore } from '../stores/useLoadingStore'
 
 // 解耦，最小知识原则：我只需要知道我要发起四种请求，不想知道请求是是用什么（ex: axios) 发起的, 并且可以统一配置
@@ -19,28 +20,52 @@ axios.interceptors.request.use((config) => {
 // 封装 axios
 type Options = {
   showLoading?: boolean
+  handleError?: boolean
 }
 
 export const useAjax = (options?: Options) => {
-  const showLoading = options?.showLoading || false
-
+  const showLoading = options?.showLoading || false // undefined null false 0 NaN '' 会取后面的值
+  const handleError = options?.handleError ?? true // undefined 或者 null 会取后面的值
   const { setVisible } = useLoadingStore()
 
+  const nav = useNavigate()
+  const table: Record<string, undefined | ((error?: AxiosError) => void)> = {
+    401: () => {
+      nav('/sign_in')
+    },
+    402: () => {
+      console.error('没付费')
+    },
+    403: () => {
+      console.error('没授权')
+    },
+    unknown: (error) => {
+      console.error(`接口出错啦！${JSON.stringify(error)}`)
+    },
+  }
+  const onHttpError = (error: AxiosError) => {
+    if (error.response && handleError) {
+      const { status } = error.response
+      const fn = table[status] || table.unknown
+      fn?.(error)
+    }
+    throw error
+  }
   // Get show hide
   const ajax = {
     get: <T> (path: string, config?: AxiosRequestConfig<any> | undefined) => {
       if (showLoading) { setVisible(true) }
-      return axios.get<T>(path, config).finally(() => {
+      return axios.get<T>(path, config).catch(onHttpError).finally(() => {
         if (showLoading) { setVisible(false) }
       })
     },
     post: <T> (path: string, data: JSONValue, config?: AxiosRequestConfig<any> | undefined) => {
       if (showLoading) { setVisible(true) }
-      return axios.post<T>(path, data, config).finally(() => {
+      return axios.post<T>(path, data, config).catch(onHttpError).finally(() => {
         if (showLoading) { setVisible(false) }
       })
     },
-    patch: () => {},
+    patch: () => { },
     delete: () => {},
   }
   return ajax

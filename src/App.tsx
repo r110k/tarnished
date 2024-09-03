@@ -15,7 +15,7 @@ vhCheck()
 export const App: React.FC = () => {
   const { visible } = useLoadingStore()
   const { popup, show, hide } = usePopup({
-    initialVisible: true,
+    initialVisible: false,
     children: <div p-16px><Loading /></div>,
     position: 'center',
   })
