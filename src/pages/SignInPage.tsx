@@ -1,25 +1,19 @@
 import { useNavigate } from 'react-router-dom'
 import type { AxiosError } from 'axios'
-import axios from 'axios'
 import { Gradient } from '../components/Gradient'
 import { Icon } from '../components/Icon'
 import { TopNav } from '../components/TopNav'
 import { useSignInStore } from '../stores/useSignInStore'
 import type { FormError } from '../lib/validate'
 import { hasError, validate } from '../lib/validate'
-import { ajax } from '../lib/ajax'
+import { ajax, useAjax } from '../lib/ajax'
 import { Input } from '../components/Input'
-import { usePopup } from '../hooks/usePopup'
-import { Loading } from '../components/Loading'
 
 export const SignInPage: React.FC = () => {
-  const { data, setData, error, setError } = useSignInStore()
   const nav = useNavigate()
-  const { popup, show, hide } = usePopup({
-    initialVisible: true,
-    children: <div p-16px><Loading /></div>,
-    position: 'center',
-  })
+  const { post: postWithLoading } = useAjax({ showLoading: true })
+  // const { post: postWithoutLoading } = useAjax({ showLoading: false })
+  const { data, setData, error, setError } = useSignInStore()
 
   const onSubmitError = (err: AxiosError<{ errors: FormError<typeof data> }>) => {
     console.error(err.response?.data)
@@ -62,19 +56,17 @@ export const SignInPage: React.FC = () => {
     ])
     setError(newError)
     if (hasError(newError)) { throw new Error('表单出错') }
-    show()
     // http://152.32.233.140:3000/api/v1/validation_codes
-    const response = await axios.post('/api/v1/validation_codes', {
+    const response = await postWithLoading('/api/v1/validation_codes', {
       email: data.email,
     })
-    // .finally(() => hide())
     return response
   }
 
   return (
     <div>
       <Gradient>
-        <TopNav title="褪色者啊" icon={ <Icon name="back" /> } />
+        <TopNav title="褪色者啊" icon={<Icon name="back" />} />
       </Gradient>
       <div text-center pt-40px pb-16px>
         <Icon name="catLogo" className='w-64px h-64px' />
@@ -89,8 +81,6 @@ export const SignInPage: React.FC = () => {
           <button g-btn type="submit">登陆</button>
         </div>
       </form>
-      {popup}
     </div>
   )
 }
-

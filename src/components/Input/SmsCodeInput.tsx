@@ -7,7 +7,7 @@ type Props = {
   request: () => Promise<unknown>
 }
 
-const maxCount = 30
+const maxCount = 5
 export const SmsCodeInput: React.FC<Props> = (props) => {
   const { placeholder, value, onChange } = props
   const [started, setStarted] = useState<Date>()
@@ -44,6 +44,7 @@ export const SmsCodeInput: React.FC<Props> = (props) => {
     if (timer.current) {
       window.clearInterval(timer.current)
     }
+    setCount(maxCount)
     timer.current = undefined
   }
   return (

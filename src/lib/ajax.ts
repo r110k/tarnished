@@ -1,5 +1,6 @@
 import type { AxiosRequestConfig } from 'axios'
 import axios from 'axios'
+import { useLoadingStore } from '../stores/useLoadingStore'
 
 // 解耦，最小知识原则：我只需要知道我要发起四种请求，不想知道请求是是用什么（ex: axios) 发起的, 并且可以统一配置
 // 静态配置用 default 配置
@@ -25,4 +26,33 @@ export const ajax = {
   },
   patch: () => {},
   delete: () => {},
+}
+
+type Options = {
+  showLoading?: boolean
+}
+
+export const useAjax = (options?: Options) => {
+  const showLoading = options?.showLoading || false
+
+  const { setVisible } = useLoadingStore()
+
+  // Get show hide
+  const ajax = {
+    get: <T> (path: string, config?: AxiosRequestConfig<any> | undefined) => {
+      if (showLoading) { setVisible(true) }
+      return axios.get<T>(path, config).finally(() => {
+        if (showLoading) { setVisible(false) }
+      })
+    },
+    post: <T> (path: string, data: JSONValue, config?: AxiosRequestConfig<any> | undefined) => {
+      if (showLoading) { setVisible(true) }
+      return axios.post<T>(path, data, config).finally(() => {
+        if (showLoading) { setVisible(false) }
+      })
+    },
+    patch: () => {},
+    delete: () => {},
+  }
+  return ajax
 }

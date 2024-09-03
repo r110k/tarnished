@@ -8,12 +8,13 @@ type Options = {
   initialVisible?: boolean
   children: ReactNode
   position?: 'bottom' | 'center'
+  onClickMask?: () => void
 }
 
-export const usePopup = ({ initialVisible = false, children, position }: Options) => {
+export const usePopup = ({ initialVisible = false, children, position, onClickMask }: Options) => {
   const [visible, setVisible] = useState(initialVisible)
   const popup = ReactDOM.createPortal(
-      <Popup visible={visible} onClickMask={() => setVisible(false)} position={position}>
+      <Popup visible={visible} onClickMask={onClickMask} position={position}>
         { children }
       </Popup>,
       rootDiv,
