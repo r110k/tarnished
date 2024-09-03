@@ -6,7 +6,7 @@ import { TopNav } from '../components/TopNav'
 import { useSignInStore } from '../stores/useSignInStore'
 import type { FormError } from '../lib/validate'
 import { hasError, validate } from '../lib/validate'
-import { ajax, useAjax } from '../lib/ajax'
+import { useAjax } from '../lib/ajax'
 import { Input } from '../components/Input'
 
 export const SignInPage: React.FC = () => {
@@ -40,7 +40,7 @@ export const SignInPage: React.FC = () => {
     ])
     setError(newError)
     if (!hasError(newError)) {
-      const response = await ajax.post<{ jwt: string }>('http://152.32.233.140:3000/api/v1/session', data)
+      const response = await postWithLoading<{ jwt: string }>('http://152.32.233.140:3000/api/v1/session', data)
         .catch(onSubmitError)
       const jwt = response.data.jwt
       localStorage.setItem('jwt', jwt)
