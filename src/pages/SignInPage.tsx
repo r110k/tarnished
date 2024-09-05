@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import type { AxiosError } from 'axios'
 import { Gradient } from '../components/Gradient'
 import { Icon } from '../components/Icon'
@@ -11,6 +11,9 @@ import { Input } from '../components/Input'
 
 export const SignInPage: React.FC = () => {
   const nav = useNavigate()
+
+  const [search] = useSearchParams()
+
   const { post: postWithLoading } = useAjax({ showLoading: true })
   // const { post: postWithoutLoading } = useAjax({ showLoading: false })
   const { data, setData, error, setError } = useSignInStore()
@@ -44,7 +47,8 @@ export const SignInPage: React.FC = () => {
         .catch(onSubmitError)
       const jwt = response.data.jwt
       localStorage.setItem('jwt', jwt)
-      nav('/items')
+      const from = search.get('from') || '/items'
+      nav(from)
     }
   }
 
