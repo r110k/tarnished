@@ -3,24 +3,26 @@ import type { FormError } from '../lib/validate'
 
 type Data = Item
 
-interface CreateTag {
+interface CreateItem {
   data: Partial<Data>
   setData: (data: Partial<Data>) => void
   error: FormError<Data>
   setError: (error: Partial<FormError<Data>>) => void
 }
 
-export const useCreateTagStore = create<CreateTag>((set, get) => (
+export const useCreateItemStore = create<CreateItem>((set, get) => (
   {
     data: {
       kind: 'expenses',
-      sign: '',
-      name: '',
+      tag_ids: [],
+      amount: 0,
+      happened_at: '',
     },
     error: {
       kind: [],
-      sign: [],
-      name: [],
+      tag_ids: [],
+      amount: [],
+      happened_at: [],
     },
     setData: (data) => {
       set(state => ({
@@ -33,7 +35,7 @@ export const useCreateTagStore = create<CreateTag>((set, get) => (
     },
     setError(error) {
       set(state => ({
-        ...state,
+        ...state.error,
         error: {
           ...error,
         },
