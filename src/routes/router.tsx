@@ -17,10 +17,10 @@ import { TagsEditPage } from '../pages/TagsEditPage'
 import { StatisticsPage } from '../pages/StatisticsPage'
 import { ItemsPageError } from '../pages/ItemsPageError'
 import { ErrorEmptyData, ErrorUnauthorized } from '../errors'
+import { AuthErrorPage } from '../pages/AuthErrorPage'
 
 export const router = createBrowserRouter([
   { path: '/', element: <Root /> },
-  { path: '/home', element: <Home title="褪色者啊" /> },
   {
     path: '/welcome',
     element: <WelcomeLayout />,
@@ -31,6 +31,8 @@ export const router = createBrowserRouter([
       { path: '4', element: <Welcome4 /> },
     ],
   },
+  { path: '/home', element: <Home title="褪色者啊" /> },
+  { path: '/sign_in', element: <SignInPage /> },
   {
     path: '/items',
     element: <ItemsPage />,
@@ -57,8 +59,14 @@ export const router = createBrowserRouter([
       })
     },
   },
-  { path: '/items/new', element: <ItemsNewPage /> },
-  { path: '/sign_in', element: <SignInPage /> },
+  {
+    path: '/items/new',
+    element: <ItemsNewPage />,
+    errorElement: <AuthErrorPage />,
+    loader: () =>
+      preload('/api/v1/me', path => axios.get<Resource<User>>(path)
+        .then(r => r.data, (e) => { throw new ErrorUnauthorized() })),
+  },
   { path: '/tags/new', element: <TagsNewPage /> },
   { path: '/tags/:id', element: <TagsEditPage /> },
   { path: '/statistics', element: <StatisticsPage /> },
