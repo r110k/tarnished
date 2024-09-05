@@ -1,17 +1,14 @@
+import type { ReactNode } from 'react'
 import { useState } from 'react'
-import { Icon } from '../../components/Icon'
-import { usePopup } from '../../hooks/usePopup'
-import { Datepicker } from '../../components/Datepicker'
-import { gtime } from '../../lib/gtime'
 
 interface Props {
   className?: string
+  itemDate: ReactNode
 }
 
 export const DateAndAmount: React.FC<Props> = (props) => {
   const { className } = props
 
-  const [date, setDate] = useState(new Date())
   const [output, _setOutput] = useState('0')
   const setOutput = (str: string) => {
     if (str.length > 10) { return }
@@ -19,12 +16,7 @@ export const DateAndAmount: React.FC<Props> = (props) => {
     if (dotIndex >= 0 && str.length - dotIndex > 3) { return }
     _setOutput(str)
   }
-  const { popup, toggle, hide } = usePopup(false,
-    <Datepicker
-      onCancel={() => hide()}
-      onConfirm={(d) => { setDate(d); hide() }}
-    />,
-  )
+
   const append = (char: string) => {
     switch (char) {
       case '.':
@@ -40,16 +32,12 @@ export const DateAndAmount: React.FC<Props> = (props) => {
     }
   }
   const clear = () => { setOutput('0') }
-  const onClickDate = () => { toggle() }
+
   return (
     <>
       <div className={className}>
         <div flex p-16px border-t-1px border-t="#ddd" items-center>
-          <span flex grow-0 shrink-0 flex-gap-8px items-center
-            onClick={onClickDate}>
-            <Icon name="calendar" className='w-24px h-24px text-[rgb(59,65,48)]' />
-            <span leading-24px text="#999">{gtime(date).format()}</span>
-          </span>
+          {props.itemDate}
           <code grow-1 shrink-1 text-right color="#53a867">{ output }</code>
         </div>
         <div grid grid-cols="[repeat(4,1fr)]" grid-rows="[repeat(4,56px)]"
@@ -71,7 +59,6 @@ export const DateAndAmount: React.FC<Props> = (props) => {
           <button row-start-3 col-start-4 row-end-5 col-end-5 text-white bg="[rgb(173,170,120)]">提交</button>
         </div>
       </div>
-      {popup}
     </>
   )
 }

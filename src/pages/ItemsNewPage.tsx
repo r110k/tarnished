@@ -7,6 +7,7 @@ import { useCreateItemStore } from '../stores/useCreateItemStore'
 import { Tags } from './ItemsNewPage/Tags'
 import s from './ItemsNewPage.module.scss'
 import { DateAndAmount } from './ItemsNewPage/DateAndAmount'
+import { ItemDate } from './ItemsNewPage/ItemDate'
 
 export const ItemsNewPage: React.FC = () => {
   const { data, error, setData, setError } = useCreateItemStore()
@@ -27,7 +28,7 @@ export const ItemsNewPage: React.FC = () => {
       </Gradient>
       <Tabs tabItems={tabItems} className='text-center grow-1 shrink-1 overflow-hidden' classPrefix="itemsNewPageTabs"
         value={data.kind!} onChange={tabItem => setData({ kind: tabItem })} />
-      <DateAndAmount className="grow-0 shrink-0" />
+      <DateAndAmount className="grow-0 shrink-0" itemDate={<ItemDate />}/>
     </div>
   )
 }
