@@ -1,12 +1,23 @@
 import { Link } from 'react-router-dom'
 import { Icon } from '../../components/Icon'
+import { emojis } from '../../lib/emojis'
 
 interface Props {
   kind: Item['kind']
+  value?: Item['tag_ids']
+  onChange?: (ids: Item['tag_ids']) => void
 }
 export const Tags: React.FC<Props> = (props) => {
   const { kind } = props
-  const tags = Array.from({ length: 299 })
+  const tags = Array.from({ length: 299 }).map<Tag>((tag, index) => ({
+    id: index,
+    name: `打车${index}`,
+    kind: 'income',
+    sign: emojis[emojis.length - 1].chars[parseInt((`${Math.random() * 100}`))],
+    user_id: 1,
+    created_at: '2024-09-05',
+    updated_at: '2024-09-05',
+  }))
   return (
     <div>
       <ol grid grid-cols="[repeat(auto-fit,48px)]"
@@ -18,14 +29,20 @@ export const Tags: React.FC<Props> = (props) => {
               <Icon name="add" className="text-[rgb(59,65,48)]" />
             </span>
           </Link>
-          <span text-12px>新增标签</span>
+          <span text-12px text="#666">新增标签</span>
         </li>
         {tags.map((tag, index) => (
-          <li key={index} w-48px flex justify-center items-center flex-col gap-y-8px>
-            <span block w-48px h-48px rounded="24px" bg="[rgb(173,170,120)]"
+          <li key={tag.id} w-48px flex justify-center items-center flex-col gap-y-8px
+            onClick={() => { props.onChange?.([tag.id]) }} >
+            { props.value?.includes(tag.id)
+              ? <span block w-48px h-48px rounded="24px" bg="[rgb(173,170,120)]"
               text-24px flex justify-center items-center
-              b-1 b="[rgb(59,65,48)]">🚀</span>
-            <span text-12px text="#666">打车</span>
+              b-2 b="[rgb(59,65,48)]">{tag.sign}</span>
+              : <span block w-48px h-48px rounded="24px" bg="[rgb(173,170,120)]"
+              text-24px flex justify-center items-center
+              b-2 b-transparent>{tag.sign}</span>
+            }
+            <span inline-block text-12px text="#666">{tag.name}</span>
           </li>
         ))}
       </ol>
