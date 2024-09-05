@@ -1,6 +1,7 @@
 import { createBrowserRouter } from 'react-router-dom'
 import type { AxiosError } from 'axios'
 import axios from 'axios'
+import { preload } from 'swr'
 import { Root } from '../components/Root'
 import { WelcomeLayout } from '../layouts/WelcomeLayout'
 import { Welcome1 } from '../pages/Welcome1'
@@ -45,14 +46,15 @@ export const router = createBrowserRouter([
         throw error
       }
       // 如果有数据就加载列表页
-      const response = await axios.get<Resources<Item>>('/api/v1/items?page=1')
-        .catch(onError)
-      if (response.data.resources.length > 0) {
-        return response.data
-      } else {
+      return preload('/api/v1/items?page=1', async (path) => {
+        const response = await axios.get<Resources<Item>>(path).catch(onError)
+        if (response.data.resources.length > 0) {
+          return response.data
+        } else {
         // 如果没数据就加载首页, 注意这里不能返回空，空也会被认定为有数据
-        throw new ErrorEmptyData()
-      }
+          throw new ErrorEmptyData()
+        }
+      })
     },
   },
   { path: '/items/new', element: <ItemsNewPage /> },
