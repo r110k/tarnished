@@ -1,4 +1,4 @@
-import { createBrowserRouter } from 'react-router-dom'
+import { Outlet, createBrowserRouter } from 'react-router-dom'
 import type { AxiosError } from 'axios'
 import axios from 'axios'
 import { preload } from 'swr'
@@ -33,44 +33,51 @@ export const router = createBrowserRouter([
   },
   { path: '/home', element: <Home title="褪色者啊" /> },
   { path: '/sign_in', element: <SignInPage /> },
+  // 放在这个分组的路由全部需要登陆
   {
-    path: '/items',
-    element: <ItemsPage />,
-    errorElement: <ItemsPageError />,
-    loader: async () => {
-      const onError = (error: AxiosError) => {
-        if (error.response) {
-          const { status } = error.response
-          if (status === 401) {
-            throw new ErrorUnauthorized()
-          }
-        }
-        throw error
-      }
-      // 如果有数据就加载列表页
-      return preload('/api/v1/items?page=1', async (path) => {
-        const response = await axios.get<Resources<Item>>(path).catch(onError)
-        if (response.data.resources.length > 0) {
-          return response.data
-        } else {
-        // 如果没数据就加载首页, 注意这里不能返回空，空也会被认定为有数据
-          throw new ErrorEmptyData()
-        }
-      })
-    },
-  },
-  {
-    path: '/items/new',
-    element: <ItemsNewPage />,
+    path: '/',
+    element: <Outlet />,
     errorElement: <AuthErrorPage />,
     loader: () =>
       preload('/api/v1/me', path => axios.get<Resource<User>>(path)
         .then(r => r.data, (e) => { throw new ErrorUnauthorized() })),
+    children: [
+      {
+        path: '/items',
+        element: <ItemsPage />,
+        errorElement: <ItemsPageError />,
+        loader: async () => {
+          const onError = (error: AxiosError) => {
+            if (error.response) {
+              const { status } = error.response
+              if (status === 401) {
+                throw new ErrorUnauthorized()
+              }
+            }
+            throw error
+          }
+          // 如果有数据就加载列表页
+          return preload('/api/v1/items?page=1', async (path) => {
+            const response = await axios.get<Resources<Item>>(path).catch(onError)
+            if (response.data.resources.length > 0) {
+              return response.data
+            } else {
+            // 如果没数据就加载首页, 注意这里不能返回空，空也会被认定为有数据
+              throw new ErrorEmptyData()
+            }
+          })
+        },
+      },
+      {
+        path: '/items/new',
+        element: <ItemsNewPage />,
+      },
+      { path: '/tags/new', element: <TagsNewPage /> },
+      { path: '/tags/:id', element: <TagsEditPage /> },
+      { path: '/statistics', element: <StatisticsPage /> },
+      { path: '/export', element: <div>敬请期待</div> },
+      { path: '/tags', element: <div>标签</div> },
+      { path: '/noty', element: <div>敬请期待</div> },
+    ],
   },
-  { path: '/tags/new', element: <TagsNewPage /> },
-  { path: '/tags/:id', element: <TagsEditPage /> },
-  { path: '/statistics', element: <StatisticsPage /> },
-  { path: '/export', element: <div>敬请期待</div> },
-  { path: '/tags', element: <div>标签</div> },
-  { path: '/noty', element: <div>敬请期待</div> },
 ])
