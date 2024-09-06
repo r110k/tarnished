@@ -172,7 +172,7 @@ export class Gtime {
   }
 
   get isoString() {
-    // 获取当前用户的时区,仅支持时区为整数的地理位置
+    // FIXME: 获取当前用户的时区,仅支持时区为整数的地理位置(+08:00), 无法支持 时区为 (-07:30) 的地理位置
     const timezone = Math.round(-this.#date.getTimezoneOffset() / 60)
     const absolute = Math.abs(timezone)
     const sign = timezone > 0 ? '+' : '-'
