@@ -40,6 +40,9 @@ export const Popup: React.FC<Props> = (props) => {
     transform: position === 'bottom'
       ? visible ? 'translateY(0%)' : 'translateY(100%)'
       : '',
+    visibility: (position === 'center'
+      ? visible ? 'visible' : 'hidden'
+      : 'visible') as 'visible' | 'hidden',
     config: {
       duration: 300,
     },
