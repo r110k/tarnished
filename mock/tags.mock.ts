@@ -42,7 +42,7 @@ export const tagsMock: MockMethod = {
   url: '/api/v1/tags',
   method: 'get',
   statusCode: 200,
-  timeout: 1500,
+  timeout: 150,
   response: ({ query }: ResponseParams): Resources<Tag> => {
     return createResponse({ total: 52, perPage: 50, page: parseInt(query.page) || 1 })
   },

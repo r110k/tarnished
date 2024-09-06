@@ -10,17 +10,17 @@ interface Props {
   onChange?: (ids: Item['tag_ids']) => void
 }
 
-const getKey = (page: number, prev: Resources<Tag>) => {
-  if (prev) {
-    const { pager, resources } = prev
-    const receivedCount = pager.per_page * (pager.page - 1) + resources.length
-    if (receivedCount >= pager.total) { return null }
-  }
-  return `/api/v1/tags?page=${page + 1}`
-}
-
 export const Tags: React.FC<Props> = (props) => {
   const { kind } = props
+
+  const getKey = (page: number, prev: Resources<Tag>) => {
+    if (prev) {
+      const { pager, resources } = prev
+      const receivedCount = pager.per_page * (pager.page - 1) + resources.length
+      if (receivedCount >= pager.total) { return null }
+    }
+    return `/api/v1/tags?page=${page + 1}&kind=${kind}`
+  }
   const { get } = useAjax({ showLoading: true, handleError: true })
   const { data, error, size, setSize } = useSWRInfinite(
     getKey,

@@ -47,9 +47,8 @@ export const ItemsNewPage: React.FC = () => {
       window.alert(message)
       return
     }
-    const response = await postWithLoading<Resource<Item>>('/api/v1/items', data)
+    await postWithLoading<Resource<Item>>('/api/v1/items', data)
       .catch(onSubmitError)
-    console.log(response)
   }
 
   return (
