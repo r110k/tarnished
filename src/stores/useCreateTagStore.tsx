@@ -1,7 +1,7 @@
 import create from 'zustand'
 import type { FormError } from '../lib/validate'
 
-type Data = Item
+type Data = Tag
 
 interface CreateTag {
   data: Partial<Data>

@@ -1,9 +1,10 @@
 .wrapper {
-  .selectedEmoji {
-    border-color: var(--color-blue);
+  .selectedTab {
+    color: #baa357;
+    font-weight: bold;
   }
 
-  .selectedTag {
-    color: #baa357;
+  .selectedEmoji {
+    border-color: var(--color-blue);
   }
 }
