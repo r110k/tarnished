@@ -1,6 +1,8 @@
 import { Link } from 'react-router-dom'
+import useSWR from 'swr'
 import { Icon } from '../../components/Icon'
-import { emojis } from '../../lib/emojis'
+import { useTagsStore } from '../../stores/useTagsStore'
+import { useAjax } from '../../lib/ajax'
 
 interface Props {
   kind: Item['kind']
@@ -9,15 +11,15 @@ interface Props {
 }
 export const Tags: React.FC<Props> = (props) => {
   const { kind } = props
-  const tags = Array.from({ length: 299 }).map<Tag>((tag, index) => ({
-    id: index,
-    name: `打车${index}`,
-    kind: 'income',
-    sign: emojis[emojis.length - 1].chars[parseInt((`${Math.random() * 100}`))],
-    user_id: 1,
-    created_at: '2024-09-05',
-    updated_at: '2024-09-05',
-  }))
+
+  const { get } = useAjax({ showLoading: true, handleError: true })
+  const { list: tags, setList } = useTagsStore()
+
+  useSWR('/api/v1/tags', async (path) => {
+    const response = await get<Resources<Tag>>(path)
+    setList(response.data.resources)
+  })
+
   return (
     <div>
       <ol grid grid-cols="[repeat(auto-fit,48px)]"

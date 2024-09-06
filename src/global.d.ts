@@ -35,7 +35,7 @@ interface Tag {
   user_id: number
   name: string
   sign: string
-  deleted_at?: string 
+  deleted_at?: string | null
   created_at: string
   updated_at: string
   kind: Item['kind']
