@@ -5,9 +5,9 @@ import { sessionMock } from './session.mock'
 import { validationCodesMock } from './validationCodes.mock'
 import { tagsMock } from './tags.mock'
 export default [
-  meMock,
-  tagsMock,
-  itemsMock,
-  sessionMock,
-  validationCodesMock,
+  ...meMock,
+  ...tagsMock,
+  ...itemsMock,
+  ...sessionMock,
+  ...validationCodesMock,
 ] as MockMethod[]

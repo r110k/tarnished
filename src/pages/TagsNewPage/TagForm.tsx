@@ -1,9 +1,12 @@
 import type { FormEventHandler } from 'react'
 import { useEffect } from 'react'
-import { useParams, useSearchParams } from 'react-router-dom'
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
+import type { AxiosError } from 'axios'
+import type { FormError } from '../../lib/validate'
 import { hasError, validate } from '../../lib/validate'
 import { useCreateTagStore } from '../../stores/useCreateTagStore'
 import { Input } from '../../components/Input'
+import { useAjax } from '../../lib/ajax'
 
 type Props = {
   type: 'create' | 'edit'
@@ -11,11 +14,12 @@ type Props = {
 
 export const TagForm: React.FC<Props> = (props) => {
   const { type } = props
+  const nav = useNavigate()
   const { data, setData, error, setError } = useCreateTagStore()
   const [searchParams] = useSearchParams()
+  const kind = searchParams.get('kind') ?? ''
   useEffect(() => {
     if (type !== 'create') { return }
-    const kind = searchParams.get('kind')
     if (!kind) { throw new Error('kind 必填') }
     if (kind !== 'expenses' && kind !== 'income') { throw new Error('kind 只能是 expenses 或者 income') }
     setData({ kind })
@@ -28,7 +32,18 @@ export const TagForm: React.FC<Props> = (props) => {
     // Ajax
     console.log(id)
   }, [])
-  const onSubmit: FormEventHandler = (event) => {
+  const { post } = useAjax({ showLoading: true, handleError: true })
+  const onSubmitError = (err: AxiosError<{ errors: FormError<typeof data> }>) => {
+    if (err.response) {
+      const { status } = err.response
+      if (status === 422) {
+        const { errors } = err.response.data
+        setError(errors)
+      }
+    }
+    throw err
+  }
+  const onSubmit: FormEventHandler = async (event) => {
     event.preventDefault()
     const newError = validate(data, [
       { key: 'kind', type: 'required', message: 'kind 必填' },
@@ -37,9 +52,11 @@ export const TagForm: React.FC<Props> = (props) => {
       { key: 'sign', type: 'required', message: 'sign 必填' },
     ])
     setError(newError)
-    if (!hasError(newError)) {
-      // console.log('没有错')
-    }
+    if (hasError(newError)) { return }
+    const response = await post<Resource<Tag>>('/api/v1/tags', data)
+      .catch(onSubmitError)
+    setData(response.data.resource)
+    nav(`/items/new?kind=${encodeURIComponent(kind)}`)
   }
   return (
     <form onSubmit={onSubmit} g-form p-16px p-t-32px>

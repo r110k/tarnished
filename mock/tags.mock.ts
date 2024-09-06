@@ -38,12 +38,39 @@ const createResponse = ({ total = 10, perPage = 10, page = 1 }, attrs?: Partial<
   }
 }
 
-export const tagsMock: MockMethod = {
-  url: '/api/v1/tags',
-  method: 'get',
-  statusCode: 200,
-  timeout: 150,
-  response: ({ query }: ResponseParams): Resources<Tag> => {
-    return createResponse({ total: 52, perPage: 50, page: parseInt(query.page) || 1 })
+export const tagsMock: MockMethod[] = [
+  {
+    url: '/api/v1/tags',
+    method: 'get',
+    statusCode: 200,
+    timeout: 150,
+    response: ({ query }: ResponseParams): Resources<Tag> => {
+      return createResponse({ total: 52, perPage: 50, page: parseInt(query.page) || 1 })
+    },
   },
-}
+  {
+    url: '/api/v1/tags',
+    method: 'post',
+    statusCode: 200,
+    timeout: 150,
+    response: ({ query }: ResponseParams): Resource<Tag> => {
+      return {
+        resource: create(),
+      }
+    },
+  // {
+  //   url: '/api/v1/tags',
+  //   method: 'post',
+  //   statusCode: 422,
+  //   timeout: 150,
+  //   response: ({ query }: ResponseParams): any => {
+  //     return {
+  //       errors: {
+  //         kind: ['错了'],
+  //         name: ['错了'],
+  //         sign: ['错了啊啊啊啊啊啊'],
+  //       },
+  //     }
+  //   },
+  },
+]

@@ -65,12 +65,14 @@ const createResponse = ({ total = 10, perPage = 10, page = 1 }, attrs?: Partial<
   }
 }
 
-export const itemsMock: MockMethod = {
-  url: '/api/v1/items',
-  method: 'get',
-  statusCode: 200,
-  timeout: 500,
-  response: ({ query }: ResponseParams): Resources<Item> => {
-    return createResponse({ total: 10, perPage: 10, page: parseInt(query.page) || 1 })
+export const itemsMock: MockMethod[] = [
+  {
+    url: '/api/v1/items',
+    method: 'get',
+    statusCode: 200,
+    timeout: 500,
+    response: ({ query }: ResponseParams): Resources<Item> => {
+      return createResponse({ total: 10, perPage: 10, page: parseInt(query.page) || 1 })
+    },
   },
-}
+]
