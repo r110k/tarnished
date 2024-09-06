@@ -6,7 +6,7 @@ import { TopNav } from '../components/TopNav'
 import { useCreateItemStore } from '../stores/useCreateItemStore'
 import { Tags } from './ItemsNewPage/Tags'
 import s from './ItemsNewPage.module.scss'
-import { DateAndAmount } from './ItemsNewPage/DateAndAmount'
+import { ItemAmount } from './ItemsNewPage/ItemAmount'
 import { ItemDate } from './ItemsNewPage/ItemDate'
 
 export const ItemsNewPage: React.FC = () => {
@@ -23,12 +23,13 @@ export const ItemsNewPage: React.FC = () => {
   return (
     <div h-vhcheck flex flex-col className={s.itemsNewPage}>
       <Gradient className="grow-0 shrink-0">
-        <TopNav title="使用你的卢恩" icon={ <Icon name="back" /> } />
+        <TopNav title="使用你的卢恩" icon={<Icon name="back" />} />
         <div text-24px>{JSON.stringify(data)}</div>
       </Gradient>
       <Tabs tabItems={tabItems} className='text-center grow-1 shrink-1 overflow-hidden' classPrefix="itemsNewPageTabs"
         value={data.kind!} onChange={tabItem => setData({ kind: tabItem })} />
-      <DateAndAmount className="grow-0 shrink-0" itemDate={<ItemDate />}/>
+      <ItemAmount className="grow-0 shrink-0"
+        itemDate={<ItemDate value={data.happened_at} onChange={(happened_at) => { setData({ happened_at }) }}/>} />
     </div>
   )
 }

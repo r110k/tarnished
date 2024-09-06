@@ -170,4 +170,13 @@ export class Gtime {
   set ms(v) {
     this.parts = { ms: v }
   }
+
+  get isoString() {
+    // 获取当前用户的时区,仅支持时区为整数的地理位置
+    const timezone = Math.round(-this.#date.getTimezoneOffset() / 60)
+    const absolute = Math.abs(timezone)
+    const sign = timezone > 0 ? '+' : '-'
+    const pad = absolute.toString().padStart(2, '0')
+    return `${this.format('yyyy-MM-ddTHH:mm:ss.fff') + sign + pad}:00`
+  }
 }
