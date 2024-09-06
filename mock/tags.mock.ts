@@ -15,8 +15,8 @@ const create = (attrs?: Partial<Tag>): Tag => {
     sign: faker.internet.emoji(),
     kind: 'income',
     deleted_at: null,
-    created_at: '2024-08-26T17:48:18.898+08:00',
-    updated_at: '2024-08-26T17:48:18.898+08:00',
+    created_at: faker.date.past().toISOString(),
+    updated_at: faker.date.past().toISOString(),
     ...attrs,
   }
 }
@@ -44,6 +44,6 @@ export const tagsMock: MockMethod = {
   statusCode: 200,
   timeout: 1500,
   response: ({ query }: ResponseParams): Resources<Tag> => {
-    return createResponse({ total: 99, perPage: 20, page: parseInt(query.page) || 1 })
+    return createResponse({ total: 52, perPage: 50, page: parseInt(query.page) || 1 })
   },
 }

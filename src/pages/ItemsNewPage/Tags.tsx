@@ -32,7 +32,7 @@ export const Tags: React.FC<Props> = (props) => {
   const isLoading = isLoadingInitialData || isLoadingMore
 
   if (!data) {
-    return <div>啥也没有</div>
+    return <div>啥也没有,点击加号创建新标签</div>
   }
 
   const lastPage = data[data.length - 1]
@@ -75,7 +75,7 @@ export const Tags: React.FC<Props> = (props) => {
         }
       </ol>
       {!hasMore
-        ? <div p-16px text-center text-sm text-gray>没有更多了</div>
+        ? <div p-16px text-center text-sm text-gray>没有更多了,点击加号创建新标签</div>
         : isLoading
           ? <Loading text-12px className='mt-16px' />
           : (<div p-16px text-center>
