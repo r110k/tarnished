@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Gradient } from '../components/Gradient'
 import { Icon } from '../components/Icon'
 import { Tabs } from '../components/Tabs'
@@ -29,6 +29,7 @@ export const ItemsNewPage: React.FC = () => {
       <Tabs tabItems={tabItems} className='text-center grow-1 shrink-1 overflow-hidden' classPrefix="itemsNewPageTabs"
         value={data.kind!} onChange={tabItem => setData({ kind: tabItem })} />
       <ItemAmount className="grow-0 shrink-0"
+        value={data.amount} onChange={amount => setData({ amount })}
         itemDate={<ItemDate value={data.happened_at} onChange={(happened_at) => { setData({ happened_at }) }}/>} />
     </div>
   )

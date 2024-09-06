@@ -4,17 +4,19 @@ import { useState } from 'react'
 interface Props {
   className?: string
   itemDate: ReactNode
+  value?: number
+  onChange: (amount: number) => void
 }
 
 export const ItemAmount: React.FC<Props> = (props) => {
-  const { className } = props
-
-  const [output, _setOutput] = useState('0')
+  const { className, value, onChange } = props
+  const [output, _setOutput] = useState(() => value?.toString() ?? '0')
   const setOutput = (str: string) => {
     if (str.length > 10) { return }
     const dotIndex = str.indexOf('.')
     if (dotIndex >= 0 && str.length - dotIndex > 3) { return }
     _setOutput(str)
+    onChange(parseFloat(str))
   }
 
   const append = (char: string) => {
