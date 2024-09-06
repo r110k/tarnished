@@ -25,7 +25,7 @@ export class Gtime {
   }
 
   /**
-   * 格式化输出
+   * 格式化输出, 默认值是 yyyy-MM-dd
    * @param pattern 目前仅支持 yyyy MM dd HH mm ss fff
    */
   format(pattern = 'yyyy-MM-dd') {

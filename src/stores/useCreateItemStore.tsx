@@ -1,5 +1,6 @@
 import create from 'zustand'
 import type { FormError } from '../lib/validate'
+import { gtime } from '../lib/gtime'
 
 type Data = Item
 
@@ -16,7 +17,7 @@ export const useCreateItemStore = create<CreateItem>((set, get) => (
       kind: 'expenses',
       tag_ids: [],
       amount: 0,
-      happened_at: '',
+      happened_at: gtime().format(),
     },
     error: {
       kind: [],

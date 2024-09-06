@@ -11,13 +11,13 @@ interface Props {
 
 export const ItemAmount: React.FC<Props> = (props) => {
   const { className, value, onChange, onSubmit } = props
-  const [output, _setOutput] = useState(() => value?.toString() ?? '0')
+  const [output, _setOutput] = useState(() => value ? (value / 100).toString(2) : '0')
   const setOutput = (str: string) => {
     if (str.length > 10) { return }
     const dotIndex = str.indexOf('.')
     if (dotIndex >= 0 && str.length - dotIndex > 3) { return }
     _setOutput(str)
-    onChange(parseFloat(str))
+    onChange(parseFloat(str) * 100)
   }
 
   const append = (char: string) => {
