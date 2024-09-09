@@ -95,4 +95,9 @@ export const tagsMock: MockMethod[] = [
       }
     },
   },
+  {
+    url: '/api/v1/tags/:id',
+    method: 'delete',
+    statusCode: 200,
+  },
 ]

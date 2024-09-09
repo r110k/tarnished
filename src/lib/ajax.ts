@@ -71,7 +71,12 @@ export const useAjax = (options?: Options) => {
         if (showLoading) { setVisible(false) }
       })
     },
-    delete: () => {},
+    destory: <T> (path: string, config?: AxiosRequestConfig<any> | undefined) => {
+      if (showLoading) { setVisible(true) }
+      return axios.delete<T>(path, config).catch(onHttpError).finally(() => {
+        if (showLoading) { setVisible(false) }
+      })
+    },
   }
   return ajax
 }
