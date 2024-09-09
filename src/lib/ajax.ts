@@ -65,7 +65,12 @@ export const useAjax = (options?: Options) => {
         if (showLoading) { setVisible(false) }
       })
     },
-    patch: () => { },
+    patch: <T> (path: string, data: JSONValue, config?: AxiosRequestConfig<any> | undefined) => {
+      if (showLoading) { setVisible(true) }
+      return axios.patch<T>(path, data, config).catch(onHttpError).finally(() => {
+        if (showLoading) { setVisible(false) }
+      })
+    },
     delete: () => {},
   }
   return ajax

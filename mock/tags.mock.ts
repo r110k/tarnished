@@ -11,7 +11,7 @@ const create = (attrs?: Partial<Tag>): Tag => {
   return {
     id: createId(),
     user_id: -10000,
-    name: faker.word.adjective(),
+    name: faker.lorem.word(),
     sign: faker.internet.emoji(),
     kind: 'income',
     deleted_at: null,
@@ -58,6 +58,7 @@ export const tagsMock: MockMethod[] = [
         resource: create(),
       }
     },
+  },
   // {
   //   url: '/api/v1/tags',
   //   method: 'post',
@@ -72,5 +73,26 @@ export const tagsMock: MockMethod[] = [
   //       },
   //     }
   //   },
+  {
+    url: '/api/v1/tags/:id',
+    method: 'get',
+    statusCode: 200,
+    timeout: 150,
+    response: ({ query }: ResponseParams): Resource<Tag> => {
+      return {
+        resource: create({ sign: '🤢' }),
+      }
+    },
+  },
+  {
+    url: '/api/v1/tags/:id',
+    method: 'patch',
+    statusCode: 200,
+    timeout: 150,
+    response: ({ query }: ResponseParams): Resource<Tag> => {
+      return {
+        resource: create(),
+      }
+    },
   },
 ]

@@ -2,6 +2,7 @@ import type { FormEventHandler } from 'react'
 import { useEffect } from 'react'
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import type { AxiosError } from 'axios'
+import useSWR from 'swr'
 import type { FormError } from '../../lib/validate'
 import { hasError, validate } from '../../lib/validate'
 import { useCreateTagStore } from '../../stores/useCreateTagStore'
@@ -16,6 +17,7 @@ export const TagForm: React.FC<Props> = (props) => {
   const { type } = props
   const nav = useNavigate()
   const { data, setData, error, setError } = useCreateTagStore()
+  const { get, post, patch } = useAjax({ showLoading: true, handleError: true })
   const [searchParams] = useSearchParams()
   const kind = searchParams.get('kind') ?? ''
   useEffect(() => {
@@ -25,14 +27,19 @@ export const TagForm: React.FC<Props> = (props) => {
     setData({ kind })
   }, [searchParams])
   const params = useParams()
+  const id = params.id
+  const { data: tag } = useSWR(id ? `/api/v1/tags/${id}` : null, async path =>
+    (await get<Resource<Tag>>(path)).data.resource,
+  )
   useEffect(() => {
     if (type !== 'edit') { return }
-    const id = params.id
     if (!id) { throw new Error('id 必填') }
-    // Ajax
-    console.log(id)
   }, [])
-  const { post } = useAjax({ showLoading: true, handleError: true })
+  useEffect(() => {
+    if (tag) {
+      setData(tag)
+    }
+  }, [tag])
   const onSubmitError = (err: AxiosError<{ errors: FormError<typeof data> }>) => {
     if (err.response) {
       const { status } = err.response
@@ -53,20 +60,22 @@ export const TagForm: React.FC<Props> = (props) => {
     ])
     setError(newError)
     if (hasError(newError)) { return }
-    const response = await post<Resource<Tag>>('/api/v1/tags', data)
-      .catch(onSubmitError)
+    const promise = type === 'create'
+      ? post<Resource<Tag>>('/api/v1/tags', data)
+      : patch<Resource<Tag>>(`/api/v1/tags/${id}`, data)
+    const response = await promise.catch(onSubmitError)
     setData(response.data.resource)
     nav(`/items/new?kind=${encodeURIComponent(kind)}`)
   }
   return (
     <form onSubmit={onSubmit} g-form p-16px p-t-32px>
-      <Input label='标签名' placeholder='请输入标签' error={error.name?.[0]}
+      <Input label='标签名' placeholder='请输入标签' error={error.name?.[0]} type="text"
         value={data.name} onChange={name => setData({ name })} />
       <Input label={<span leading-24px>符号 <span text-24px>{data.sign}</span></span>} type='emoji' error={error.sign?.[0]}
         value={data.sign} onChange={sign => setData({ sign })} />
       <p text-center p-b-24px>记账时长按标签，即可进行编辑</p>
       <div>
-        <button g-btn>确定</button>
+        <button type="submit" g-btn>确定</button>
       </div>
     </form>
   )
