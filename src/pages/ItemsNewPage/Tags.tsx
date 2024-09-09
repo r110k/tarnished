@@ -1,10 +1,9 @@
 import { Link, useNavigate } from 'react-router-dom'
 import useSWRInfinite from 'swr/infinite'
-import type { TouchEvent } from 'react'
-import { useRef } from 'react'
 import { Icon } from '../../components/Icon'
 import { useAjax } from '../../lib/ajax'
 import { Loading } from '../../components/Loading'
+import { LongPressable } from '../../components/LongPressable'
 
 interface Props {
   kind: Item['kind']
@@ -32,34 +31,7 @@ export const Tags: React.FC<Props> = (props) => {
   const isLoadingInitialData = !data && !error
   const isLoadingMore = data?.[size - 1] === undefined && !error
   const isLoading = isLoadingInitialData || isLoadingMore
-  const touchTimer = useRef<number>()
-  const touchPosition = useRef<{ x?: number; y?: number }>({ x: undefined, y: undefined })
-  const onTouchStart = (e: TouchEvent, id: Tag['id']) => {
-    touchTimer.current = window.setTimeout(() => {
-      nav(`/tags/${id}`)
-    }, 800)
-    const { clientX: x, clientY: y } = e.touches[0]
-    touchPosition.current = { x, y }
-  }
-  const onTouchMove = (e: TouchEvent, id: Tag['id']) => {
-    const limitMoveDistance = 5
-    const { clientX: newX, clientY: newY } = e.touches[0]
-    const { x, y } = touchPosition.current
-    if (x === undefined || y === undefined) { return }
-    const deltaX = x - newX
-    const deltaY = y - newY
-    const distance = Math.sqrt(deltaX ** 2 + deltaY ** 2)
-    if (distance > limitMoveDistance) {
-      window.clearTimeout(touchTimer.current)
-      touchTimer.current = undefined
-    }
-  }
-  const onTouchEnd = (e: TouchEvent, id: Tag['id']) => {
-    if (touchTimer.current) {
-      window.clearTimeout(touchTimer.current)
-      touchTimer.current = undefined
-    }
-  }
+
   if (!data) {
     return <div>啥也没有,点击加号创建新标签</div>
   } else {
@@ -85,19 +57,21 @@ export const Tags: React.FC<Props> = (props) => {
           {
             data.map(({ resources }) => {
               return resources.map((tag, index) => (
-                <li key={tag.id} w-49px flex justify-center items-center flex-col gap-y-8px
-                  onClick={() => { props.onChange?.([tag.id]) }}
-                  onTouchStart={e => onTouchStart(e, tag.id)} onTouchMove={e => onTouchMove(e, tag.id)} onTouchEnd={e => onTouchEnd(e, tag.id)} >
-                  {props.value?.includes(tag.id)
-                    ? <span block w-49px h-48px rounded="24px" bg="[rgb(173,170,120)]"
-                      text-25px flex justify-center items-center
-                      b-3 b="[rgb(59,65,48)]">{tag.sign}</span>
-                    : <span block w-49px h-48px rounded="24px" bg="[rgb(173,170,120)]"
-                      text-25px flex justify-center items-center
-                      b-3 b-transparent>{tag.sign}</span>
-                  }
-                  <span inline-block text-12px text="#666">{tag.name}</span>
+                <li key={tag.id} onClick={() => { props.onChange?.([tag.id]) }} >
+                  <LongPressable onEnd={() => nav(`/tags/${tag.id}`)} className="w-49px flex justify-center items-center flex-col gap-y-8px" >
+
+                    {props.value?.includes(tag.id)
+                      ? <span block w-49px h-48px rounded="24px" bg="[rgb(173,170,120)]"
+                        text-25px flex justify-center items-center
+                        b-3 b="[rgb(59,65,48)]">{tag.sign}</span>
+                      : <span block w-49px h-48px rounded="24px" bg="[rgb(173,170,120)]"
+                        text-25px flex justify-center items-center
+                        b-3 b-transparent>{tag.sign}</span>
+                    }
+                    <span inline-block text-12px text="#666">{tag.name}</span>
+                  </LongPressable>
                 </li>
+
               ))
             })
           }
