@@ -18,6 +18,7 @@ import { StatisticsPage } from '../pages/StatisticsPage'
 import { ItemsPageError } from '../pages/ItemsPageError'
 import { ErrorEmptyData, ErrorUnauthorized } from '../errors'
 import { AuthErrorPage } from '../pages/AuthErrorPage'
+import { NotePage } from '../pages/NotePage'
 
 export const router = createBrowserRouter([
   { path: '/', element: <Root /> },
@@ -79,5 +80,9 @@ export const router = createBrowserRouter([
       { path: '/tags', element: <div>标签</div> },
       { path: '/noty', element: <div>敬请期待</div> },
     ],
+  },
+  // 看板路由
+  {
+    path: '/guaban', element: <NotePage />,
   },
 ])

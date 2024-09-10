@@ -16,6 +16,8 @@ declare module 'react' {
     b?: string
     z?: string
     bg?: string
+    to?: string
+    from?: string
     top?: string
     right?: string
     bottom?: string
