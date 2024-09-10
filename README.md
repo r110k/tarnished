@@ -115,3 +115,22 @@ export default function App() {
   );
 }
 ```
+
+## 随机字符串
+```javascript
+function generateSecureRandomString(length) {
+    var array = new Uint8Array(length);
+    window.crypto.getRandomValues(array);
+    var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    var charactersLength = characters.length;
+    var result = '';
+    for (var i = 0; i < length; i++) {
+        result += characters.charAt(array[i] % charactersLength);
+    }
+    return result;
+}
+
+var secureRandomString = generateSecureRandomString(8);
+console.log(secureRandomString);
+
+```
