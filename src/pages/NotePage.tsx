@@ -2,9 +2,14 @@ import useSWR from 'swr'
 import { useAjax } from '../lib/ajax'
 import { gtime } from '../lib/gtime'
 import olu from '../assets/images/olu.gif'
+import { useTitle } from '../hooks/useTitle'
 import { NoteCard } from './ItemsNewPage/NoteCard'
 
-export const NotePage: React.FC = () => {
+type Props = {
+  title: string
+}
+export const NotePage: React.FC<Props> = (props) => {
+  useTitle(props.title)
   const { get } = useAjax({ showLoading: true, handleError: true })
 
   const { data: todayWeather } = useSWR('https://api.gualand.cc/', async path =>
@@ -39,7 +44,7 @@ export const NotePage: React.FC = () => {
     return (
       <div bg="#C8E2DF" h-screen pb-16px pt-16px px-12px overflow-auto>
         <div flex gap-x-32px>
-          <div w-168px rounded-24px p-12px pb-6px text-14px text="#3d3d3d"
+          <div w-200px rounded-24px p-12px pb-6px text-14px text="#3d3d3d"
             bg-gradient-to-b from="#CFF5FE" to="#F6FEFF" bg="linear-gradient(to bottom, #CFF5FE 70%, #F6FEFF 30%)">
             <div flex justify-between leading-16px>
               <div>{isDayMode ? todayWeather.textDay : todayWeather.textNight}</div>

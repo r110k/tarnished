@@ -19,6 +19,7 @@ import { ItemsPageError } from '../pages/ItemsPageError'
 import { ErrorEmptyData, ErrorUnauthorized } from '../errors'
 import { AuthErrorPage } from '../pages/AuthErrorPage'
 import { NotePage } from '../pages/NotePage'
+import { gtime } from '../lib/gtime'
 
 export const router = createBrowserRouter([
   { path: '/', element: <Root /> },
@@ -83,6 +84,6 @@ export const router = createBrowserRouter([
   },
   // 看板路由
   {
-    path: '/guaban', element: <NotePage />,
+    path: '/guaban', element: <NotePage title={`${gtime().format('yyyyMMdd')}号瓜田`} />,
   },
 ])
