@@ -19,7 +19,7 @@ export const NotePage: React.FC<Props> = (props) => {
   const noteList: Note[] = [
     { color: '#efc97f', eventName: '拖地', happen_at: '2024-09-01', id: -1, created_at: '', updated_at: '' }, // todi
     { color: '#db6b6d', eventName: '陆陆换床单', happen_at: '2024-09-08', id: -1, created_at: '', updated_at: '' }, // lu iddj
-    { color: '#669ee2', eventName: '陆陆理发', happen_at: '2024-07-13', id: -1, created_at: '', updated_at: '' }, // lu lifa
+    { color: '#669ee2', eventName: '陆陆理发', happen_at: '2024-08-23', id: -1, created_at: '', updated_at: '' }, // lu lifa
     { color: '#82c2bb', eventName: '去迪士尼', happen_at: '2024-10-05', id: -1, created_at: '', updated_at: '' }, // desiny
     { color: '#6f8dee', eventName: '瓜瓜换床单', happen_at: '2024-09-01', id: -1, created_at: '', updated_at: '' }, // gua iddj
     { color: '#6cba92', eventName: '瓜瓜理发', happen_at: '2024-09-01', id: -1, created_at: '', updated_at: '' }, // gua lifa
