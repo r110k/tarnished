@@ -3,16 +3,12 @@ import { Gradient } from '../components/Gradient'
 import { TopNav } from '../components/TopNav'
 import { useAjax } from '../lib/ajax'
 import { BackIcon } from '../components/BackIcon'
+import { confirmable } from '../lib/confirmable'
 import { TagForm } from './TagsNewPage/TagForm'
 
 export const TagsEditPage: React.FC = () => {
   const nav = useNavigate()
-  const confirmable = (fn: () => void) => () => {
-    const result = window.confirm('🏮 确认要删除么？')
-    if (result) {
-      fn()
-    }
-  }
+
   const { id } = useParams()
   const { destory } = useAjax()
   const onDelete = confirmable(async () => {
