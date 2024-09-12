@@ -65,7 +65,9 @@ export const StatisticsPage: React.FC = () => {
           <Icon name="back" className='w-24px h-24px cursor-pointer' />
         } />
       </Gradient>
-      <TimeRangePicker selected={timeRange} onSelect={setTimeRange} />
+      <TimeRangePicker selected={timeRange} onSelect={setTimeRange} timeRanges={[
+        { key: 'thisMonth', text: '本月' },
+        { key: 'lastMonth', text: '上月' }]} />
       <div flex p-16px items-center>
         <span grow-0 shrink-0>类型：</span>
         <div grow-1 shrink-1><Input type="select" options={[{ value: 'income', text: '收入' }, { value: 'expenses', text: '支出' }]}
