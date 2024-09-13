@@ -9,6 +9,7 @@ type Props = {
 export const LineChart: React.FC<Props> = (props) => {
   const { className, items } = props
   const divRef = useRef<HTMLDivElement>(null)
+  const myChart = useRef<echarts.ECharts>()
 
   const xItems = items?.map(item => item.x)
   const yItems = items?.map(item => item.y)
@@ -18,7 +19,7 @@ export const LineChart: React.FC<Props> = (props) => {
   useEffect(() => {
     if (!divRef.current) { return }
     if (initialized.current) { return }
-    const myChart = echarts.init(divRef.current)
+    myChart.current = echarts.init(divRef.current)
     const option: echarts.EChartsOption = {
       tooltip: {
         show: true,
@@ -58,9 +59,16 @@ export const LineChart: React.FC<Props> = (props) => {
         },
       ],
     }
-    myChart.setOption(option)
+    myChart.current.setOption(option)
     initialized.current = true
   }, [])
+  useEffect(() => {
+    const option: echarts.EChartsOption = {
+      xAxis: { data: xItems },
+      series: [{ data: yItems }],
+    }
+    myChart.current?.setOption(option)
+  }, [items])
   return (
     <div ref={divRef} className={className}></div>
   )
