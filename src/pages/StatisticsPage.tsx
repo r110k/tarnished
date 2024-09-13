@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import useSWR from 'swr'
 import { Gradient } from '../components/Gradient'
 import { Icon } from '../components/Icon'
 import type { TimeRage } from '../components/TimeRangePicker'
@@ -8,44 +9,38 @@ import { LineChart } from '../components/LineChart'
 import { PieChart } from '../components/PieChart'
 import { RankChart } from '../components/RankChart'
 import { Input } from '../components/Input'
+import { useAjax } from '../lib/ajax'
+import { gtime } from '../lib/gtime'
+
+type Groups = { happened_at: string; amount: number }[]
 
 export const StatisticsPage: React.FC = () => {
   const [timeRange, setTimeRange] = useState<TimeRage>('thisMonth')
-  const [x, setX] = useState('expenses')
+  const { get } = useAjax({ showLoading: false, handleError: true })
+  const [kind, setKind] = useState('expenses')
 
-  const items = [
-    { happened_at: '2021-12-01', amount: 5000 },
-    { happened_at: '2021-12-02', amount: 8900 },
-    { happened_at: '2021-12-03', amount: 25000 },
-    { happened_at: '2021-12-04', amount: 4000 },
-    { happened_at: '2021-12-05', amount: 7500 },
-    { happened_at: '2021-12-06', amount: 7500 },
-    { happened_at: '2021-12-07', amount: 9000 },
-    { happened_at: '2021-12-08', amount: 9000 },
-    { happened_at: '2021-12-09', amount: 1500 },
-    { happened_at: '2021-12-10', amount: 1500 },
-    { happened_at: '2021-12-11', amount: 15000 },
-    { happened_at: '2021-12-12', amount: 18900 },
-    { happened_at: '2021-12-13', amount: 15000 },
-    { happened_at: '2021-12-14', amount: 14000 },
-    { happened_at: '2021-12-15', amount: 17500 },
-    { happened_at: '2021-12-16', amount: 17500 },
-    { happened_at: '2021-12-17', amount: 19000 },
-    { happened_at: '2021-12-18', amount: 19000 },
-    { happened_at: '2021-12-19', amount: 11500 },
-    { happened_at: '2021-12-20', amount: 11500 },
-    { happened_at: '2021-12-21', amount: 25000 },
-    { happened_at: '2021-12-22', amount: 28900 },
-    { happened_at: '2021-12-23', amount: 25000 },
-    { happened_at: '2021-12-24', amount: 24000 },
-    { happened_at: '2021-12-25', amount: 27500 },
-    { happened_at: '2021-12-26', amount: 27500 },
-    { happened_at: '2021-12-27', amount: 29000 },
-    { happened_at: '2021-12-28', amount: 29000 },
-    { happened_at: '2021-12-29', amount: 31500 },
-    { happened_at: '2021-12-30', amount: 33500 },
-    { happened_at: '2021-12-31', amount: 35000 },
-  ].map(({ happened_at, amount }) => ({ x: happened_at, y: amount }))
+  const generateStartAndEnd = () => {
+    if (timeRange === 'thisMonth') {
+      const start = gtime().firstDayOfMonth.format()
+      /**
+     * 不能直接获取这个月的最后一天，因为最后一天0点0分0秒会漏掉最后一天的所有数据
+     * 在下个月第一天的时候有一个坑，就是你不能加一个月然后获取到这个月的第一天
+     * 比如：1月31号加一个月可能是 3月1号2号或3号，反正不是 2月1号，稳妥的方法是，获取到
+     * 这个月的最后一天，然后加一天
+     */
+      const end = gtime().lastDayOfMonth.add(1, 'days').format()
+      return { start, end }
+    } else {
+      return { start: '', end: '' }
+    }
+  }
+  const { start, end } = generateStartAndEnd()
+
+  const { data: items } = useSWR(`/api/v1/items/summary?happeneded_after=${start}&happeneded_before=${end}&kind=${kind}&group_by=happened_at`,
+    async path =>
+      (await get<{ groups: Groups; total: number }>(path)).data.groups
+        .map(({ happened_at, amount }) => ({ x: happened_at, y: amount })),
+  )
 
   const items2 = [
     { tag: { name: '吃饭', sign: '🥨' }, amount: 160000 },
@@ -71,7 +66,7 @@ export const StatisticsPage: React.FC = () => {
       <div flex p-16px items-center>
         <span grow-0 shrink-0>类型：</span>
         <div grow-1 shrink-1><Input type="select" options={[{ value: 'income', text: '收入' }, { value: 'expenses', text: '支出' }]}
-        value={x} onChange={value => setX(value)} disableError={true} /></div>
+        value={kind} onChange={value => setKind(value)} disableError={true} /></div>
       </div>
       <LineChart className='h-160px' items={items} />
       <PieChart className='h-260px mt-24px' items={items3} />

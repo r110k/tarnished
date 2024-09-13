@@ -128,6 +128,10 @@ export class Gtime {
     return this.#date.getTime()
   }
 
+  get firstDayOfMonth() {
+    return new Gtime(new Date(this.year, this.month - 1, 1))
+  }
+
   get lastDayOfMonth() {
     return new Gtime(new Date(this.year, this.month - 1 + 1, 0))
   }
