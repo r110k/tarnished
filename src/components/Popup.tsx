@@ -61,7 +61,7 @@ export const Popup: React.FC<Props> = (props) => {
             { children }
         </animated.div>)
           : (<animated.div fixed bg-white left="[50%]" top="[50%]" translate-x="-50%" translate-y="-50%"
-            style={wrapperStyles} z="[var(--z-popup)]">
+            style={wrapperStyles} z="[var(--z-popup)]" rounded-8px overflow-hidden>
               { children }
           </animated.div>)}
       </div>
