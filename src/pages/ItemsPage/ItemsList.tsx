@@ -1,27 +1,33 @@
-import axios from 'axios'
 import useSWRInfinite from 'swr/infinite'
 import { Loading } from '../../components/Loading'
 import { Icon } from '../../components/Icon'
-interface Props {
+import { useAjax } from '../../lib/ajax'
+import type { Gtime } from '../../lib/gtime'
+
+type Props = {
+  start: Gtime
+  end: Gtime
 }
 
-// Index 代表从 0 开始
-const getKey = (pageIndex: number, prev: Resources<Item>) => {
+export const ItemsList: React.FC<Props> = (props) => {
+  const { start, end } = props
+  const { get } = useAjax()
+  // Index 代表从 0 开始
+  const getKey = (pageIndex: number, prev: Resources<Item>) => {
   // 注意： 上一页可能不是满的
-  if (prev) {
-    const { pager, resources } = prev
-    const sendCount = (pager.page - 1) * pager.per_page + resources.length
-    const total = pager.total
-    if (sendCount >= total) { return null }
+    if (prev) {
+      const { pager, resources } = prev
+      const sendCount = (pager.page - 1) * pager.per_page + resources.length
+      const total = pager.total
+      if (sendCount >= total) { return null }
+    }
+    return `/api/v1/items?page=${pageIndex + 1}&happened_after=${start.format()}&happened_before=${end.format()}`
   }
-  return `/api/v1/items?page=${pageIndex + 1}`
-}
-export const ItemsList: React.FC<Props> = () => {
   const { data, error, size, setSize } = useSWRInfinite(
     // A function
     getKey,
     // fetcher,
-    async path => (await axios.get<Resources<Item>>(path)).data,
+    async path => (await get<Resources<Item>>(path)).data,
     { revalidateFirstPage: false },
   )
   const onLoadMore = () => {

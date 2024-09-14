@@ -66,6 +66,11 @@ export class Gtime {
     })
   }
 
+  set(parts: Partial<Parts>) {
+    this.parts = parts
+    return this
+  }
+
   /**
    * 格式化输出, 默认值是 yyyy-MM-dd
    * @param pattern 目前仅支持 yyyy MM dd HH mm ss fff, ddd 是星期几的英文缩写， dddd 是具体的星期几

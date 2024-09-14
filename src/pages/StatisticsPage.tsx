@@ -11,7 +11,7 @@ import { RankChart } from '../components/RankChart'
 import { Input } from '../components/Input'
 import { useAjax } from '../lib/ajax'
 import type { Gtime } from '../lib/gtime'
-import { gtime } from '../lib/gtime'
+import { timeRangeToStartAndEnd } from '../lib/timeRangeToStartAndEnd'
 
 type Groups = { happened_at: string; amount: number }[]
 type Groups2 = { tag_id: string; tag: Tag; amount: number }[]
@@ -25,23 +25,12 @@ const getKey = (params: GetKeyParams) => {
   const { start, end, kind, group_by } = params
   return `/api/v1/items/summary?happeneded_after=${start.format()}&happeneded_before=${end.format()}&kind=${kind}&group_by=${group_by}`
 }
-const timeRangeMap: { [k in TimeRange]: number } = {
-  thisMonth: 0,
-  lastMonth: -1,
-  twoMonthsAgo: -2,
-  threeMonthsAgo: -3,
-  thisYear: 0,
-  custom: 0,
-}
+
 export const StatisticsPage: React.FC = () => {
   const [timeRange, setTimeRange] = useState<TimeRange>('thisMonth')
   const { get } = useAjax({ showLoading: false, handleError: true })
   const [kind, setKind] = useState<Item['kind']>('expenses')
-  const generateStartEnd = () => {
-    const start = gtime().firstDayOfMonth.add(timeRangeMap[timeRange], 'month')
-    const end = start.lastDayOfMonth.add(1, 'days')
-    return { start, end }
-  }
+
   const generateDefaultItems = (time: Gtime) => {
     // const defaultItems: { x: string; y: number }[] = []
     return Array.from({ length: time.dayCountOfMonth }).map((_, i) => {
@@ -49,9 +38,8 @@ export const StatisticsPage: React.FC = () => {
       return { x, y: 0 }
     })
   }
-  const { start, end } = generateStartEnd()
+  const { start, end } = timeRangeToStartAndEnd(timeRange)
   const defaultItems = generateDefaultItems(start)
-
   const { data: items } = useSWR(getKey({ start, end, kind, group_by: 'happened_at' }),
     async path =>
       (await get<{ groups: Groups; total: number }>(path)).data.groups
@@ -60,7 +48,6 @@ export const StatisticsPage: React.FC = () => {
   const normalizedItems = defaultItems?.map(defaultItem =>
     items?.find(item => item.x === defaultItem.x) || defaultItem,
   )
-
   const { data: data2 } = useSWR(getKey({ start, end, kind, group_by: 'tag_id' }),
     async path =>
       (await get<{ groups: Groups2; total: number }>(path)).data,
