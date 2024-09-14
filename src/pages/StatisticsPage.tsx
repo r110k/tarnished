@@ -48,7 +48,7 @@ export const StatisticsPage: React.FC = () => {
   const { data: items } = useSWR(`/api/v1/items/summary?happeneded_after=${start.format()}&happeneded_before=${end.format()}&kind=${kind}&group_by=happened_at`,
     async path =>
       (await get<{ groups: Groups; total: number }>(path)).data.groups
-        .map(({ happened_at, amount }) => ({ x: happened_at, y: amount })),
+        .map(({ happened_at, amount }) => ({ x: happened_at, y: amount / 100 })),
   )
   const normalizedItems = defaultItems?.map(defaultItem =>
     items?.find(item => item.x === defaultItem.x) || defaultItem,
@@ -60,7 +60,7 @@ export const StatisticsPage: React.FC = () => {
   )
   const { groups: groups2 } = data2 ?? { }
   const items2 = groups2?.map((item, i) => {
-    return { name: item.tag.name, value: item.amount, sign: item.tag.sign }
+    return { name: item.tag.name, value: item.amount / 100, sign: item.tag.sign }
   })
 
   // const items2 = [

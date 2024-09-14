@@ -1,9 +1,10 @@
 import * as echarts from 'echarts'
 import { useEffect, useRef } from 'react'
 
+type Item = { name: string | number ; value: number; sign: string }
 type Props = {
   className: string
-  items?: { name: string | number ; value: number; sign: string }[]
+  items?: Item[]
 }
 
 export const PieChart: React.FC<Props> = (props) => {
@@ -16,7 +17,12 @@ export const PieChart: React.FC<Props> = (props) => {
     if (initialized.current) { return }
     myChart.current = echarts.init(divRef.current)
     const option: echarts.EChartsOption = {
-      tooltip: { trigger: 'item' },
+      tooltip: {
+        trigger: 'item',
+        formatter: ({ data: { name, value, sign } }: any) => {
+          return `${sign} ${name}: ${value}元`
+        },
+      },
       grid: { top: 0, right: 0, bottom: 0, left: 0 },
       series: [
         {
