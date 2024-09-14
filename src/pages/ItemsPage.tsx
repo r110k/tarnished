@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { AddItemFloatButton } from '../components/AddItemFloatButton'
-import type { TimeRage } from '../components/TimeRangePicker'
+import type { TimeRange } from '../components/TimeRangePicker'
 import { TimeRangePicker } from '../components/TimeRangePicker'
 import { TopNav } from '../components/TopNav'
 import { TopMenu } from '../components/TopMenu'
@@ -11,7 +11,7 @@ import { ItemsList } from './ItemsPage/ItemsList'
 import { ItemsSummary } from './ItemsPage/ItemsSummary'
 
 export const ItemsPage: React.FC = () => {
-  const [timeRange, setTimeRange] = useState<TimeRage>('thisMonth')
+  const [timeRange, setTimeRange] = useState<TimeRange>('thisMonth')
   const { visible, setVisible } = useMenuStore()
   return (
     <div>

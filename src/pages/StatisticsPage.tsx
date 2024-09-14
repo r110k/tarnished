@@ -2,7 +2,7 @@ import { useState } from 'react'
 import useSWR from 'swr'
 import { Gradient } from '../components/Gradient'
 import { Icon } from '../components/Icon'
-import type { TimeRage } from '../components/TimeRangePicker'
+import type { TimeRange } from '../components/TimeRangePicker'
 import { TimeRangePicker } from '../components/TimeRangePicker'
 import { TopNav } from '../components/TopNav'
 import { LineChart } from '../components/LineChart'
@@ -25,19 +25,20 @@ const getKey = (params: GetKeyParams) => {
   const { start, end, kind, group_by } = params
   return `/api/v1/items/summary?happeneded_after=${start.format()}&happeneded_before=${end.format()}&kind=${kind}&group_by=${group_by}`
 }
+const timeRangeMap: { [k in TimeRange]: number } = {
+  thisMonth: 0,
+  lastMonth: -1,
+  twoMonthsAgo: -2,
+  threeMonthsAgo: -3,
+  thisYear: 0,
+  custom: 0,
+}
 export const StatisticsPage: React.FC = () => {
-  const [timeRange, setTimeRange] = useState<TimeRage>('thisMonth')
+  const [timeRange, setTimeRange] = useState<TimeRange>('thisMonth')
   const { get } = useAjax({ showLoading: false, handleError: true })
   const [kind, setKind] = useState<Item['kind']>('expenses')
-  const generateStartEndAnd = () => {
-    let start: Gtime
-    if (timeRange === 'thisMonth') {
-      start = gtime().firstDayOfMonth
-    } else if (timeRange === 'lastMonth') {
-      start = gtime().firstDayOfMonth.add(-1, 'month')
-    } else {
-      start = gtime()
-    }
+  const generateStartEnd = () => {
+    const start = gtime().firstDayOfMonth.add(timeRangeMap[timeRange], 'month')
     const end = start.lastDayOfMonth.add(1, 'days')
     return { start, end }
   }
@@ -48,7 +49,7 @@ export const StatisticsPage: React.FC = () => {
       return { x, y: 0 }
     })
   }
-  const { start, end } = generateStartEndAnd()
+  const { start, end } = generateStartEnd()
   const defaultItems = generateDefaultItems(start)
 
   const { data: items } = useSWR(getKey({ start, end, kind, group_by: 'happened_at' }),
@@ -78,11 +79,13 @@ export const StatisticsPage: React.FC = () => {
       </Gradient>
       <TimeRangePicker selected={timeRange} onSelect={setTimeRange} timeRanges={[
         { key: 'thisMonth', text: '本月' },
-        { key: 'lastMonth', text: '上月' }]} />
+        { key: 'lastMonth', text: '上月' },
+        { key: 'twoMonthsAgo', text: '两个月前' },
+        { key: 'threeMonthsAgo', text: '三个月前' }]} />
       <div flex p-16px items-center>
         <span grow-0 shrink-0>类型：</span>
         <div grow-1 shrink-1><Input type="select" options={[{ value: 'income', text: '收入' }, { value: 'expenses', text: '支出' }]}
-        value={kind} onChange={value => setKind(value)} disableError={true} /></div>
+        value={kind} onChange={value => setKind(value as Item['kind'])} disableError={true} /></div>
       </div>
       <LineChart className='h-160px' items={normalizedItems} />
       <PieChart className='h-260px mt-24px' items={items2} />

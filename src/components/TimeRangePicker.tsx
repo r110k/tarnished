@@ -1,5 +1,5 @@
 import { Tabs } from './Tabs'
-export type TimeRage =
+export type TimeRange =
   | 'thisMonth'
   | 'lastMonth'
   | 'thisYear'
@@ -8,18 +8,16 @@ export type TimeRage =
   | 'threeMonthsAgo'
 
 type Props = {
-  selected: TimeRage
-  onSelect: (selected: TimeRage) => void
-  timeRanges?: { key: TimeRage; text: string }[]
+  selected: TimeRange
+  onSelect: (selected: TimeRange) => void
+  timeRanges?: { key: TimeRange; text: string }[]
 }
 
-const defaultTimeRanges: { key: TimeRage; text: string }[] = [
+const defaultTimeRanges: { key: TimeRange; text: string }[] = [
   { key: 'thisMonth', text: '本月' },
   { key: 'lastMonth', text: '上月' },
   { key: 'thisYear', text: '今年' },
   { key: 'custom', text: '自定义时间' },
-  { key: 'twoMonthsAgo', text: '两个月前' },
-  { key: 'threeMonthsAgo', text: '三个月前' },
 ]
 
 export const TimeRangePicker: React.FC<Props> = (props) => {
