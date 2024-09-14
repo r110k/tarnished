@@ -92,6 +92,13 @@ export class Gtime {
     return (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0
   }
 
+  /**
+   * 移除时分秒
+   */
+  removeTime() {
+    this.set({ hours: 0, minutes: 0, seconds: 0, ms: 0 })
+  }
+
   get currentYearDaysCount() {
     if (this.isLeapYear()) {
       return 366

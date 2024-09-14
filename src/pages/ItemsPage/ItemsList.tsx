@@ -21,7 +21,7 @@ export const ItemsList: React.FC<Props> = (props) => {
       const total = pager.total
       if (sendCount >= total) { return null }
     }
-    return `/api/v1/items?page=${pageIndex + 1}&happened_after=${start.format()}&happened_before=${end.format()}`
+    return `/api/v1/items?page=${pageIndex + 1}&happened_after=${start.isoString}&happened_before=${end.isoString}`
   }
   const { data, error, size, setSize } = useSWRInfinite(
     // A function

@@ -31,19 +31,19 @@ export const TimeRangePicker: React.FC<Props> = (props) => {
   const onConfirm = () => {
     _onSelect({
       name: 'custom',
-      start: gtime(),
-      end: gtime(),
+      start: gtime(start),
+      end: gtime(end).add(1, 'day'),
     })
   }
   const { popup, show } = usePopup({
-    children: <div onClick={onConfirm} >
+    children: <div>
       <header py-14px px-16px text-18px text-white bg="[var(--color-blue)]">请选择时间</header>
       <main px-16px py-24px gap-y-8px>
         <Input type='date' disableError label="开始时间: " value={start} onChange={val => setStart(val)}/>
         <Input type='date' disableError label="结束时间: " value={end} onChange={val => setEnd(val)} className="mt-8px"/>
       </main>
       <footer text-right>
-        <button b-none bg-transparent px-16px py-8px>确认</button>
+        <button b-none bg-transparent px-16px py-8px onClick={onConfirm}>确认</button>
         <button b-none bg-transparent px-16px py-8px>取消</button>
       </footer>
     </div>,

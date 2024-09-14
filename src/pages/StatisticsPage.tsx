@@ -12,7 +12,6 @@ import { Input } from '../components/Input'
 import { useAjax } from '../lib/ajax'
 import type { Gtime } from '../lib/gtime'
 import { gtime } from '../lib/gtime'
-import { timeRangeToStartAndEnd } from '../lib/timeRangeToStartAndEnd'
 
 type Groups = { happened_at: string; amount: number }[]
 type Groups2 = { tag_id: string; tag: Tag; amount: number }[]
@@ -39,7 +38,7 @@ export const StatisticsPage: React.FC = () => {
       return { x, y: 0 }
     })
   }
-  const { start, end } = timeRangeToStartAndEnd(timeRange)
+  const { start, end } = timeRange
   const defaultItems = generateDefaultItems(start)
   const { data: items } = useSWR(getKey({ start, end, kind, group_by: 'happened_at' }),
     async path =>

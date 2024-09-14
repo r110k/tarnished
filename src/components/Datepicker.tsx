@@ -8,12 +8,13 @@ type Props = {
   onCancel?: () => void
   onConfirm?: (value: Date) => void
 }
+const getNow = () => gtime().set({ hours: 0, minutes: 0, seconds: 0, ms: 0 })
 // useRef + foreUpdate ({} 永远不等于另一个 {})
 export const Datepicker: React.FC<Props> = (props) => {
   const { start, end, value, onCancel, onConfirm } = props
-  const startTime = start ? gtime(start) : gtime().add(-3, 'year')
-  const endTime = end ? gtime(end) : gtime().add(10, 'year')
-  const valueTime = useRef(value ? gtime(value) : gtime())
+  const startTime = start ? gtime(start) : getNow().add(-3, 'year')
+  const endTime = end ? gtime(end) : getNow().add(10, 'year')
+  const valueTime = useRef(value ? gtime(value) : getNow())
   const [, update] = useState({})
   if (endTime.timestamp <= startTime.timestamp) {
     throw new Error(`结束时间（你传入的 ${endTime.format()}）必须晚于开始时间（你传入的 ${startTime.format()}）`)

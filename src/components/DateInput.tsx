@@ -22,7 +22,7 @@ export const DateInput: React.FC<Props> = (props) => {
     <>
       {popup}
       <input type="text" readOnly className={className} g-input-text placeholder={placeholder || '请输入'}
-        value={value} onClick={toggle}/>
+        value={value ? gtime(value).format() : ''} onClick={toggle}/>
     </>
   )
 }
