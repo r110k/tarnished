@@ -48,6 +48,7 @@ export const TimeRangePicker: React.FC<Props> = (props) => {
       </footer>
     </div>,
     position: 'center',
+    zIndex: 'var(--z-dialog)',
   })
   const onSelect = (key: TimeRange) => {
     if (key.name === 'custom') {
