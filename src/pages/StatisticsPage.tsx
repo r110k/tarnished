@@ -14,6 +14,7 @@ import type { Gtime } from '../lib/gtime'
 import { gtime } from '../lib/gtime'
 
 type Groups = { happened_at: string; amount: number }[]
+type Groups2 = { tag_id: string; tag: Tag; amount: number }[]
 
 export const StatisticsPage: React.FC = () => {
   const [timeRange, setTimeRange] = useState<TimeRage>('thisMonth')
@@ -53,16 +54,24 @@ export const StatisticsPage: React.FC = () => {
     items?.find(item => item.x === defaultItem.x) || defaultItem,
   )
 
-  const items2 = [
-    { tag: { name: '吃饭', sign: '🥨' }, amount: 160000 },
-    { tag: { name: '买衣服', sign: '👕' }, amount: 60000 },
-    { tag: { name: '氪金', sign: '🎉' }, amount: 64800 },
-    { tag: { name: '打车', sign: '🚕' }, amount: 50000 },
-    { tag: { name: '加油', sign: '🛢' }, amount: 40000 },
-    { tag: { name: '房租', sign: '⛺' }, amount: 399900 },
-  ]
-  const items3 = items2.map(({ tag, amount }) => ({ x: tag.name, y: amount }))
-  const items4 = items2.map(({ tag, amount }) => ({ name: tag.name, sign: tag.sign, amount })).sort((a, b) => b.amount - a.amount)
+  const { data: data2 } = useSWR(`/api/v1/items/summary?happeneded_after=${start.format()}&happeneded_before=${end.format()}&kind=${kind}&group_by=tag_id`,
+    async path =>
+      (await get<{ groups: Groups2; total: number }>(path)).data,
+  )
+  const { groups: groups2 } = data2 ?? { }
+  const items2 = groups2?.map((item, i) => {
+    return { name: item.tag.name, value: item.amount, sign: item.tag.sign }
+  })
+
+  // const items2 = [
+  //   { tag: { name: '吃饭', sign: '🥨' }, amount: 160000 },
+  //   { tag: { name: '买衣服', sign: '👕' }, amount: 60000 },
+  //   { tag: { name: '氪金', sign: '🎉' }, amount: 64800 },
+  //   { tag: { name: '打车', sign: '🚕' }, amount: 50000 },
+  //   { tag: { name: '加油', sign: '🛢' }, amount: 40000 },
+  //   { tag: { name: '房租', sign: '⛺' }, amount: 399900 },
+  // ]
+  // const items4 = items2?.map(({ tag, amount }) => ({ name: tag.name, sign: tag.sign, amount })).sort((a, b) => b.amount - a.amount)
 
   return (
     <div pb-16px>
@@ -80,8 +89,8 @@ export const StatisticsPage: React.FC = () => {
         value={kind} onChange={value => setKind(value)} disableError={true} /></div>
       </div>
       <LineChart className='h-160px' items={normalizedItems} />
-      <PieChart className='h-260px mt-24px' items={items3} />
-      <RankChart className='my-24px' items={items4}/>
+      <PieChart className='h-260px mt-24px' items={items2} />
+      {/* <RankChart className='my-24px' items={items4}/> */}
     </div>
   )
 }

@@ -3,26 +3,26 @@ import { useEffect, useRef } from 'react'
 
 type Props = {
   className: string
-  items: { x: string | number ; y: number }[]
+  items?: { name: string | number ; value: number; sign: string }[]
 }
 
 export const PieChart: React.FC<Props> = (props) => {
-  const { className, items } = props
+  const { className, items = [] } = props
   const divRef = useRef<HTMLDivElement>(null)
   const initialized = useRef(false)
+  const myChart = useRef<echarts.ECharts>()
   useEffect(() => {
     if (!divRef.current) { return }
     if (initialized.current) { return }
-    const myChart = echarts.init(divRef.current)
+    myChart.current = echarts.init(divRef.current)
     const option: echarts.EChartsOption = {
       tooltip: { trigger: 'item' },
       grid: { top: 0, right: 0, bottom: 0, left: 0 },
       series: [
         {
-          name: 'Access From',
           type: 'pie',
-          radius: '85%',
-          data: items?.map(item => ({ value: item.y, name: item.x })),
+          radius: '90%',
+          data: items,
           emphasis: {
             itemStyle: {
               shadowBlur: 10,
@@ -33,9 +33,15 @@ export const PieChart: React.FC<Props> = (props) => {
         },
       ],
     }
-    myChart.setOption(option)
+    myChart.current.setOption(option)
     initialized.current = true
   }, [])
+  useEffect(() => {
+    const option: echarts.EChartsOption = {
+      series: [{ data: items }],
+    }
+    myChart.current?.setOption(option)
+  }, [items])
   return (
     <div ref={divRef} className={className}></div>
   )
