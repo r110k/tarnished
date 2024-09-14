@@ -4,7 +4,7 @@ import { useState } from 'react'
 
 type Props = {
   visible: boolean
-  onClickMask?: () => void
+  onClickMask: () => void
   children?: ReactNode
   position?: 'bottom' | 'center'
 }
