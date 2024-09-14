@@ -2,7 +2,7 @@ import type { TimeRange } from '../components/TimeRangePicker'
 import type { Gtime } from './gtime'
 import { gtime } from './gtime'
 
-const timeRangeMap: { [k in TimeRange]: number } = {
+const timeRangeMap: { [k in TimeRange['name']]: number } = {
   thisMonth: 0,
   lastMonth: -1,
   twoMonthsAgo: -2,
@@ -13,12 +13,12 @@ const timeRangeMap: { [k in TimeRange]: number } = {
 
 export const timeRangeToStartAndEnd = (timeRange: TimeRange) => {
   let selected: Gtime, start: Gtime, end: Gtime
-  switch (timeRange) {
+  switch (timeRange.name) {
     case 'thisMonth':
     case 'lastMonth':
     case 'twoMonthsAgo':
     case 'threeMonthsAgo':
-      selected = gtime().firstDayOfMonth.add(timeRangeMap[timeRange], 'month')
+      selected = gtime().firstDayOfMonth.add(timeRangeMap[timeRange.name], 'month')
       start = selected.firstDayOfMonth
       end = start.lastDayOfMonth.add(1, 'days')
       return { start, end }

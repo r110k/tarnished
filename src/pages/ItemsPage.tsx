@@ -8,11 +8,12 @@ import { useMenuStore } from '../stores/useMenuStore'
 import { Gradient } from '../components/Gradient'
 import { Icon } from '../components/Icon'
 import { timeRangeToStartAndEnd } from '../lib/timeRangeToStartAndEnd'
+import { gtime } from '../lib/gtime'
 import { ItemsList } from './ItemsPage/ItemsList'
 import { ItemsSummary } from './ItemsPage/ItemsSummary'
 
 export const ItemsPage: React.FC = () => {
-  const [timeRange, setTimeRange] = useState<TimeRange>('thisMonth')
+  const [timeRange, setTimeRange] = useState<TimeRange>({ name: 'thisMonth', start: gtime().firstDayOfMonth, end: gtime().lastDayOfMonth.add(1, 'day') })
   const { visible, setVisible } = useMenuStore()
   const { start, end } = timeRangeToStartAndEnd(timeRange)
   return (

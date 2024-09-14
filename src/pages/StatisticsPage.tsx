@@ -11,6 +11,7 @@ import { RankChart } from '../components/RankChart'
 import { Input } from '../components/Input'
 import { useAjax } from '../lib/ajax'
 import type { Gtime } from '../lib/gtime'
+import { gtime } from '../lib/gtime'
 import { timeRangeToStartAndEnd } from '../lib/timeRangeToStartAndEnd'
 
 type Groups = { happened_at: string; amount: number }[]
@@ -27,7 +28,7 @@ const getKey = (params: GetKeyParams) => {
 }
 
 export const StatisticsPage: React.FC = () => {
-  const [timeRange, setTimeRange] = useState<TimeRange>('thisMonth')
+  const [timeRange, setTimeRange] = useState<TimeRange>({ name: 'thisMonth', start: gtime().firstDayOfMonth, end: gtime().lastDayOfMonth.add(1, 'day') })
   const { get } = useAjax({ showLoading: false, handleError: true })
   const [kind, setKind] = useState<Item['kind']>('expenses')
 
@@ -65,10 +66,11 @@ export const StatisticsPage: React.FC = () => {
         } />
       </Gradient>
       <TimeRangePicker selected={timeRange} onSelect={setTimeRange} timeRanges={[
-        { key: 'thisMonth', text: '本月' },
-        { key: 'lastMonth', text: '上月' },
-        { key: 'twoMonthsAgo', text: '两个月前' },
-        { key: 'threeMonthsAgo', text: '三个月前' }]} />
+        { text: '本月', key: { name: 'thisMonth', start: gtime().firstDayOfMonth, end: gtime().lastDayOfMonth.add(1, 'day') } },
+        { text: '上月', key: { name: 'lastMonth', start: gtime().firstDayOfMonth.add(-1, 'day').firstDayOfMonth, end: gtime().firstDayOfMonth.add(-1, 'month').lastDayOfMonth } },
+        { text: '两个月前', key: { name: 'twoMonthsAgo', start: gtime().firstDayOfMonth.add(-2, 'day').firstDayOfMonth, end: gtime().firstDayOfMonth.add(-2, 'month').lastDayOfMonth } },
+        { text: '三个月前', key: { name: 'threeMonthsAgo', start: gtime().firstDayOfMonth.add(-3, 'day').firstDayOfMonth, end: gtime().firstDayOfMonth.add(-3, 'month').lastDayOfMonth } },
+      ]} />
       <div flex p-16px items-center>
         <span grow-0 shrink-0>类型：</span>
         <div grow-1 shrink-1><Input type="select" options={[{ value: 'income', text: '收入' }, { value: 'expenses', text: '支出' }]}
