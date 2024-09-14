@@ -15,25 +15,31 @@ import { gtime } from '../lib/gtime'
 
 type Groups = { happened_at: string; amount: number }[]
 type Groups2 = { tag_id: string; tag: Tag; amount: number }[]
-
+type GetKeyParams = {
+  start: Gtime
+  end: Gtime
+  kind: Item['kind']
+  group_by: 'happened_at' | 'tag_id'
+}
+const getKey = (params: GetKeyParams) => {
+  const { start, end, kind, group_by } = params
+  return `/api/v1/items/summary?happeneded_after=${start.format()}&happeneded_before=${end.format()}&kind=${kind}&group_by=${group_by}`
+}
 export const StatisticsPage: React.FC = () => {
   const [timeRange, setTimeRange] = useState<TimeRage>('thisMonth')
   const { get } = useAjax({ showLoading: false, handleError: true })
-  const [kind, setKind] = useState('expenses')
+  const [kind, setKind] = useState<Item['kind']>('expenses')
   const generateStartEndAnd = () => {
+    let start: Gtime
     if (timeRange === 'thisMonth') {
-      const start = gtime().firstDayOfMonth
-      /**
-     * 不能直接获取这个月的最后一天，因为最后一天0点0分0秒会漏掉最后一天的所有数据
-     * 在下个月第一天的时候有一个坑，就是你不能加一个月然后获取到这个月的第一天
-     * 比如：1月31号加一个月可能是 3月1号2号或3号，反正不是 2月1号，稳妥的方法是，获取到
-     * 这个月的最后一天，然后加一天
-     */
-      const end = gtime().lastDayOfMonth.add(1, 'days')
-      return { start, end }
+      start = gtime().firstDayOfMonth
+    } else if (timeRange === 'lastMonth') {
+      start = gtime().firstDayOfMonth.add(-1, 'month')
     } else {
-      return { start: gtime(), end: gtime() }
+      start = gtime()
     }
+    const end = start.lastDayOfMonth.add(1, 'days')
+    return { start, end }
   }
   const generateDefaultItems = (time: Gtime) => {
     // const defaultItems: { x: string; y: number }[] = []
@@ -45,7 +51,7 @@ export const StatisticsPage: React.FC = () => {
   const { start, end } = generateStartEndAnd()
   const defaultItems = generateDefaultItems(start)
 
-  const { data: items } = useSWR(`/api/v1/items/summary?happeneded_after=${start.format()}&happeneded_before=${end.format()}&kind=${kind}&group_by=happened_at`,
+  const { data: items } = useSWR(getKey({ start, end, kind, group_by: 'happened_at' }),
     async path =>
       (await get<{ groups: Groups; total: number }>(path)).data.groups
         .map(({ happened_at, amount }) => ({ x: happened_at, y: amount / 100 })),
@@ -54,7 +60,7 @@ export const StatisticsPage: React.FC = () => {
     items?.find(item => item.x === defaultItem.x) || defaultItem,
   )
 
-  const { data: data2 } = useSWR(`/api/v1/items/summary?happeneded_after=${start.format()}&happeneded_before=${end.format()}&kind=${kind}&group_by=tag_id`,
+  const { data: data2 } = useSWR(getKey({ start, end, kind, group_by: 'tag_id' }),
     async path =>
       (await get<{ groups: Groups2; total: number }>(path)).data,
   )
@@ -62,16 +68,6 @@ export const StatisticsPage: React.FC = () => {
   const items2 = groups2?.map((item, i) => {
     return { name: item.tag.name, value: item.amount / 100, sign: item.tag.sign }
   })
-
-  // const items2 = [
-  //   { tag: { name: '吃饭', sign: '🥨' }, amount: 160000 },
-  //   { tag: { name: '买衣服', sign: '👕' }, amount: 60000 },
-  //   { tag: { name: '氪金', sign: '🎉' }, amount: 64800 },
-  //   { tag: { name: '打车', sign: '🚕' }, amount: 50000 },
-  //   { tag: { name: '加油', sign: '🛢' }, amount: 40000 },
-  //   { tag: { name: '房租', sign: '⛺' }, amount: 399900 },
-  // ]
-  // const items4 = items2?.map(({ tag, amount }) => ({ name: tag.name, sign: tag.sign, amount })).sort((a, b) => b.amount - a.amount)
 
   return (
     <div pb-16px>

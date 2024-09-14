@@ -89,6 +89,12 @@ export const summaryMock: MockMethod[] = [
               },
               amount: 5000,
             },
+            //   { tag: { name: '吃饭', sign: '🥨' }, amount: 160000 },
+            //   { tag: { name: '买衣服', sign: '👕' }, amount: 60000 },
+            //   { tag: { name: '氪金', sign: '🎉' }, amount: 64800 },
+            //   { tag: { name: '打车', sign: '🚕' }, amount: 50000 },
+            //   { tag: { name: '加油', sign: '🛢' }, amount: 40000 },
+            //   { tag: { name: '房租', sign: '⛺' }, amount: 399900 },
           ],
           total: 10000,
         }
