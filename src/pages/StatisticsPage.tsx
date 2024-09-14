@@ -10,6 +10,7 @@ import { PieChart } from '../components/PieChart'
 import { RankChart } from '../components/RankChart'
 import { Input } from '../components/Input'
 import { useAjax } from '../lib/ajax'
+import type { Gtime } from '../lib/gtime'
 import { gtime } from '../lib/gtime'
 
 type Groups = { happened_at: string; amount: number }[]
@@ -18,32 +19,32 @@ export const StatisticsPage: React.FC = () => {
   const [timeRange, setTimeRange] = useState<TimeRage>('thisMonth')
   const { get } = useAjax({ showLoading: false, handleError: true })
   const [kind, setKind] = useState('expenses')
-
-  const generateStartEndAndDefaultItems = () => {
-    const defaultItems: { x: string; y: number }[] = []
+  const generateStartEndAnd = () => {
     if (timeRange === 'thisMonth') {
-      const startTime = gtime().firstDayOfMonth
-      const start = startTime.format()
+      const start = gtime().firstDayOfMonth
       /**
      * 不能直接获取这个月的最后一天，因为最后一天0点0分0秒会漏掉最后一天的所有数据
      * 在下个月第一天的时候有一个坑，就是你不能加一个月然后获取到这个月的第一天
      * 比如：1月31号加一个月可能是 3月1号2号或3号，反正不是 2月1号，稳妥的方法是，获取到
      * 这个月的最后一天，然后加一天
      */
-      const endTime = gtime().lastDayOfMonth.add(1, 'days')
-      const end = endTime.format()
-      for (let i = 0; i < startTime.dayCountOfMonth; i++) {
-        const x = startTime.clone.add(i, 'days').format()
-        defaultItems.push({ x, y: 0 })
-      }
-      return { start, end, defaultItems }
+      const end = gtime().lastDayOfMonth.add(1, 'days')
+      return { start, end }
     } else {
-      return { start: '', end: '' }
+      return { start: gtime(), end: gtime() }
     }
   }
-  const { start, end, defaultItems } = generateStartEndAndDefaultItems()
+  const generateDefaultItems = (time: Gtime) => {
+    // const defaultItems: { x: string; y: number }[] = []
+    return Array.from({ length: time.dayCountOfMonth }).map((_, i) => {
+      const x = time.clone.add(i, 'days').format()
+      return { x, y: 0 }
+    })
+  }
+  const { start, end } = generateStartEndAnd()
+  const defaultItems = generateDefaultItems(start)
 
-  const { data: items } = useSWR(`/api/v1/items/summary?happeneded_after=${start}&happeneded_before=${end}&kind=${kind}&group_by=happened_at`,
+  const { data: items } = useSWR(`/api/v1/items/summary?happeneded_after=${start.format()}&happeneded_before=${end.format()}&kind=${kind}&group_by=happened_at`,
     async path =>
       (await get<{ groups: Groups; total: number }>(path)).data.groups
         .map(({ happened_at, amount }) => ({ x: happened_at, y: amount })),
@@ -84,4 +85,3 @@ export const StatisticsPage: React.FC = () => {
     </div>
   )
 }
-
