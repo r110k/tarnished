@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import useSWR from 'swr'
 import { Gradient } from '../components/Gradient'
 import { Icon } from '../components/Icon'
@@ -19,27 +19,37 @@ export const StatisticsPage: React.FC = () => {
   const { get } = useAjax({ showLoading: false, handleError: true })
   const [kind, setKind] = useState('expenses')
 
-  const generateStartAndEnd = () => {
+  const generateStartEndAndDefaultItems = () => {
+    const defaultItems: { x: string; y: number }[] = []
     if (timeRange === 'thisMonth') {
-      const start = gtime().firstDayOfMonth.format()
+      const startTime = gtime().firstDayOfMonth
+      const start = startTime.format()
       /**
      * 不能直接获取这个月的最后一天，因为最后一天0点0分0秒会漏掉最后一天的所有数据
      * 在下个月第一天的时候有一个坑，就是你不能加一个月然后获取到这个月的第一天
      * 比如：1月31号加一个月可能是 3月1号2号或3号，反正不是 2月1号，稳妥的方法是，获取到
      * 这个月的最后一天，然后加一天
      */
-      const end = gtime().lastDayOfMonth.add(1, 'days').format()
-      return { start, end }
+      const endTime = gtime().lastDayOfMonth.add(1, 'days')
+      const end = endTime.format()
+      for (let i = 0; i < startTime.dayCountOfMonth; i++) {
+        const x = startTime.clone.add(i, 'days').format()
+        defaultItems.push({ x, y: 0 })
+      }
+      return { start, end, defaultItems }
     } else {
       return { start: '', end: '' }
     }
   }
-  const { start, end } = generateStartAndEnd()
+  const { start, end, defaultItems } = generateStartEndAndDefaultItems()
 
   const { data: items } = useSWR(`/api/v1/items/summary?happeneded_after=${start}&happeneded_before=${end}&kind=${kind}&group_by=happened_at`,
     async path =>
       (await get<{ groups: Groups; total: number }>(path)).data.groups
         .map(({ happened_at, amount }) => ({ x: happened_at, y: amount })),
+  )
+  const normalizedItems = defaultItems?.map(defaultItem =>
+    items?.find(item => item.x === defaultItem.x) || defaultItem,
   )
 
   const items2 = [
@@ -68,7 +78,7 @@ export const StatisticsPage: React.FC = () => {
         <div grow-1 shrink-1><Input type="select" options={[{ value: 'income', text: '收入' }, { value: 'expenses', text: '支出' }]}
         value={kind} onChange={value => setKind(value)} disableError={true} /></div>
       </div>
-      <LineChart className='h-160px' items={items} />
+      <LineChart className='h-160px' items={normalizedItems} />
       <PieChart className='h-260px mt-24px' items={items3} />
       <RankChart className='my-24px' items={items4}/>
     </div>

@@ -3,7 +3,7 @@ import { useEffect, useRef } from 'react'
 
 type Props = {
   className: string
-  items: { x: string | number ; y: number }[]
+  items?: { x: string | number ; y: number }[]
 }
 
 export const LineChart: React.FC<Props> = (props) => {

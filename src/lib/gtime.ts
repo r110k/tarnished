@@ -136,6 +136,14 @@ export class Gtime {
     return new Gtime(new Date(this.year, this.month - 1 + 1, 0))
   }
 
+  get dayCountOfMonth() {
+    return this.lastDayOfMonth.day
+  }
+
+  get clone() {
+    return new Gtime(this.#date)
+  }
+
   get year() {
     return this.parts.year
   }
