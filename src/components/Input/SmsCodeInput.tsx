@@ -15,9 +15,8 @@ export const SmsCodeInput: React.FC<Props> = (props) => {
   const timer = useRef<number>()
 
   const onClick = async () => {
-    const response = await props.request()
+    await props.request()
     // 开始倒计时（但是只有请求成功才能开始倒计时）
-    console.log('开始倒计时')
     setStarted(new Date())
   }
 
