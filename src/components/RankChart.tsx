@@ -1,14 +1,12 @@
-import { Money } from './Moneny'
-
 type Props = {
   className: string
-  items: { name: string; amount: number; sign: string }[]
+  items?: { name: string; value: number; sign: string }[]
 }
 
 export const RankChart: React.FC<Props> = (props) => {
   const { className, items } = props
-  const total = items?.reduce((result, item) => result += item.amount, 0) ?? 0
-  const max = items?.reduce((result, item) => Math.max(result, item.amount), 0) ?? 0
+  const total = items?.reduce((result, item) => result += item.value, 0) ?? 0
+  const max = items?.reduce((result, item) => Math.max(result, item.value), 0) ?? 0
 
   const colors = [
     // Adobe color trends
@@ -57,14 +55,15 @@ export const RankChart: React.FC<Props> = (props) => {
         w-48px h-48px rounded-24px bg="#adaa78" text-24px
         flex justify-center items-center>{item.sign}</div>
       <div row-start-1 col-start-2 row-end-2 col-end-3 self-end>
-        {item.name} - { `${((item.amount / total) * 100).toFixed(2)}%`}
+        {item.name} - { `${((item.value / total) * 100).toFixed(2)}%`}
       </div>
       <div row-start-1 col-start-3 row-end-2 col-end-4 self-end text-right >
-        <Money value={item.amount} />
+        {/* <Money value={item.value * 100} /> */}
+        { item.value } 元
       </div>
       <div row-start-2 col-start-2 row-end-3 col-end-4 self-start bg-red h-8px rounded-4px bg='#ccc'
         relative overflow-hidden>
-          <div rounded-4px h-full style={{ background: colors[calColorIndex(index)], width: `${(item.amount / max) * 100}%` }} />
+          <div rounded-4px h-full style={{ background: colors[calColorIndex(index)], width: `${(item.value / max) * 100}%` }} />
         </div>
     </div>)
   }
