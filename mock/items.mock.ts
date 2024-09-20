@@ -75,4 +75,16 @@ export const itemsMock: MockMethod[] = [
       return createResponse({ total: 10, perPage: 10, page: parseInt(query.page) || 1 })
     },
   },
+  {
+    url: '/api/v1/items/balance',
+    method: 'get',
+    statusCode: 200,
+    response: () => {
+      return {
+        income: 3550000,
+        expenses: 1000000,
+        balance: 2550000,
+      }
+    },
+  },
 ]

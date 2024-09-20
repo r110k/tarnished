@@ -39,7 +39,7 @@ export const ItemsPage: React.FC = () => {
         outOfRange
           ? <div text-center p-32px >筛选账单时间跨度不能超过365天</div>
           : <>
-            <ItemsSummary />
+            <ItemsSummary start={start} end={end} />
             <ItemsList start={start} end={end} />
           </>
       }
