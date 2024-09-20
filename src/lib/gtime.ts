@@ -28,6 +28,8 @@ export const gtime = (p?: number | string | Date) => {
 }
 
 export class Gtime {
+  static DAY = 24 * 60 * 60 * 1000
+
   #date: Date
 
   constructor(p?: number | string | Date) {

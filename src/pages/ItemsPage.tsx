@@ -7,14 +7,24 @@ import { TopMenu } from '../components/TopMenu'
 import { useMenuStore } from '../stores/useMenuStore'
 import { Gradient } from '../components/Gradient'
 import { Icon } from '../components/Icon'
-import { gtime } from '../lib/gtime'
+import { Gtime, gtime } from '../lib/gtime'
 import { ItemsList } from './ItemsPage/ItemsList'
 import { ItemsSummary } from './ItemsPage/ItemsSummary'
 
 export const ItemsPage: React.FC = () => {
-  const [timeRange, setTimeRange] = useState<TimeRange>({ name: 'thisMonth', start: gtime().firstDayOfMonth, end: gtime().lastDayOfMonth.add(1, 'day') })
+  const [outOfRange, setOutOfRange] = useState(false)
+  const [timeRange, _setTimeRange] = useState<TimeRange>({ name: 'thisMonth', start: gtime().firstDayOfMonth, end: gtime().lastDayOfMonth.add(1, 'day') })
   const { visible, setVisible } = useMenuStore()
   const { start, end } = timeRange
+  const setTimeRange = (t: TimeRange) => {
+    if (t.start.timestamp > t.end.timestamp) {
+      [t.start, t.end] = [t.end, t.start]
+    }
+    if (t.end.timestamp - t.start.timestamp > Gtime.DAY * 365) {
+      setOutOfRange(true)
+    }
+    _setTimeRange(t)
+  }
   return (
     <div>
       <Gradient>
@@ -23,8 +33,14 @@ export const ItemsPage: React.FC = () => {
         } />
       </Gradient>
       <TimeRangePicker selected={timeRange} onSelect={setTimeRange} />
-      <ItemsSummary />
-      <ItemsList start={start} end={end} />
+      {
+        outOfRange
+          ? <div text-center p-32px >筛选账单时间跨度不能超过365天</div>
+          : <>
+            <ItemsSummary />
+            <ItemsList start={start} end={end} />
+          </>
+      }
       <AddItemFloatButton />
       <TopMenu onClickMask={() => setVisible(false)} visible={visible} />
     </div>
