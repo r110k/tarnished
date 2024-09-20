@@ -43,7 +43,7 @@ export const SignInPage: React.FC = () => {
     ])
     setError(newError)
     if (!hasError(newError)) {
-      const response = await postWithLoading<{ jwt: string }>('http://152.32.233.140:3000/api/v1/session', data)
+      const response = await postWithLoading<{ jwt: string }>('/api/v1/session', data)
         .catch(onSubmitError)
       const jwt = response.data.jwt
       localStorage.setItem('jwt', jwt)
@@ -60,7 +60,6 @@ export const SignInPage: React.FC = () => {
     ])
     setError(newError)
     if (hasError(newError)) { throw new Error('表单出错') }
-    // http://152.32.233.140:3000/api/v1/validation_codes
     const response = await postWithLoading('/api/v1/validation_codes', {
       email: data.email,
     })
