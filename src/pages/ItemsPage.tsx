@@ -22,6 +22,8 @@ export const ItemsPage: React.FC = () => {
     }
     if (t.end.timestamp - t.start.timestamp > Gtime.DAY * 365) {
       setOutOfRange(true)
+    } else {
+      setOutOfRange(false)
     }
     _setTimeRange(t)
   }
