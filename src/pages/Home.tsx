@@ -1,5 +1,5 @@
 import useSWR from 'swr'
-import { Navigate } from 'react-router-dom'
+import { Link, Navigate } from 'react-router-dom'
 import logo from '../assets/images/catLogo.svg'
 import { useAjax } from '../lib/ajax'
 import { useTitle } from '../hooks/useTitle'
@@ -11,8 +11,8 @@ interface Props {
 }
 
 export const Home: React.FC<Props> = (props) => {
-  const { get } = useAjax({ showLoading: true, handleError: false })
   useTitle(props.title)
+  const { get } = useAjax({ showLoading: true, handleError: false })
 
   const { data: meData, error: meError } = useSWR('/api/v1/me', async (path) => {
     const response = await get<Resource<User>>(path)
@@ -37,7 +37,9 @@ export const Home: React.FC<Props> = (props) => {
       <img mt-20vh mb-20vh width="128" height="125" src={logo} />
     </div>
     <div px-16px>
-      <button g-btn>开始记账</button>
+      <Link to="/items/new">
+        <button g-btn>开始记账</button>
+      </Link>
     </div>
     <AddItemFloatButton />
   </div>

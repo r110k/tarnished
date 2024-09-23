@@ -44,7 +44,7 @@ export const Tags: React.FC<Props> = (props) => {
     return (
       <div>
         <ol grid grid-cols="[repeat(auto-fit,47px)]"
-          justify-center gap-x-33px gap-y-16px px-32px py-16px>
+          justify-center gap-x-33px gap-y-16px px-16px py-16px>
           <li w-49px flex justify-center items-center flex-col gap-y-8px>
             <Link to={`/tags/new?kind=${kind}`}>
               <span block w-49px h-48px rounded="24px" bg="[rgb(173,170,120)]"

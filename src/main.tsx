@@ -1,7 +1,9 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { App } from './App'
+import { setUp } from './lib/ajax'
 
+setUp()
 const div = document.getElementById('root') as HTMLElement
 
 const root = ReactDOM.createRoot(div)

@@ -33,17 +33,22 @@ export const router = createBrowserRouter([
       { path: '4', element: <Welcome4 /> },
     ],
   },
-  { path: '/home', element: <Home title="褪色者啊" /> },
   { path: '/sign_in', element: <SignInPage /> },
   // 放在这个分组的路由全部需要登陆
   {
     path: '/',
     element: <Outlet />,
     errorElement: <AuthErrorPage />,
-    loader: () =>
-      preload('/api/v1/me', path => axios.get<Resource<User>>(path)
-        .then(r => r.data, (e) => { throw new ErrorUnauthorized() })),
+    loader: async () => {
+      return await axios.get<Resource<User>>('/api/v1/me')
+        .catch((e) => {
+          if (e.response?.status === 401) { throw new ErrorUnauthorized() }
+        })
+    },
+    // loader: () => preload('/api/v1/me', path => axios.get<Resource<User>>(path)
+    //   .then(r => r.data, (e) => { throw new ErrorUnauthorized() })),
     children: [
+      { path: '/home', element: <Home title="褪色者啊" /> },
       {
         path: '/items',
         element: <ItemsPage />,
@@ -59,15 +64,13 @@ export const router = createBrowserRouter([
             throw error
           }
           // 如果有数据就加载列表页
-          return preload('/api/v1/items?page=1', async (path) => {
-            const response = await axios.get<Resources<Item>>(path).catch(onError)
-            if (response.data.resources.length > 0) {
-              return response.data
-            } else {
+          const response = await axios.get<Resources<Item>>('/api/v1/items?page=1').catch(onError)
+          if (response.data.resources.length > 0) {
+            return response.data
+          } else {
             // 如果没数据就加载首页, 注意这里不能返回空，空也会被认定为有数据
-              throw new ErrorEmptyData()
-            }
-          })
+            throw new ErrorEmptyData()
+          }
         },
       },
       {
