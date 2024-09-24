@@ -3,26 +3,42 @@ import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 import { useLoadingStore } from '../stores/useLoadingStore'
 
-let hasSetup = false
+// let hasSetup = false
 
-export const setUp = () => {
-  if (hasSetup) { return }
-  hasSetup = true
-  // 解耦，最小知识原则：我只需要知道我要发起四种请求，不想知道请求是是用什么（ex: axios) 发起的, 并且可以统一配置
-  // 静态配置用 default 配置
-  axios.defaults.baseURL = isDev ? '/' : 'http://152.32.233.140:3000'
-  axios.defaults.baseURL = 'http://152.32.233.140:3000'
-  axios.defaults.headers.post['Content-Type'] = 'application/json'
-  axios.defaults.timeout = 5000
+// export const setUp = () => {
+//   if (hasSetup) { return }
+//   hasSetup = true
+//   // 解耦，最小知识原则：我只需要知道我要发起四种请求，不想知道请求是是用什么（ex: axios) 发起的, 并且可以统一配置
+//   // 静态配置用 default 配置
+//   axios.defaults.baseURL = isDev ? '/' : 'http://152.32.233.140:3000'
+//   axios.defaults.baseURL = 'http://152.32.233.140:3000'
+//   axios.defaults.headers.post['Content-Type'] = 'application/json'
+//   axios.defaults.timeout = 5000
 
-  // 动态配置用拦截器
-  axios.interceptors.request.use((config) => {
-    const jwt = localStorage.getItem('jwt') || ''
-    config.headers = config.headers || {}
-    if (config.headers && jwt) { config.headers.Authorization = `Bearer ${jwt}` }
-    return config
-  })
-}
+//   // 动态配置用拦截器
+//   axios.interceptors.request.use((config) => {
+//     const jwt = localStorage.getItem('jwt') || ''
+//     config.headers = config.headers || {}
+//     if (config.headers && jwt) { config.headers.Authorization = `Bearer ${jwt}` }
+//     return config
+//   })
+// }
+
+const axiosInstance = axios.create({
+  baseURL: isDev ? 'http://152.32.233.140:3000' : 'http://152.32.233.140:3000',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+  timeout: 5000,
+})
+axiosInstance.interceptors.request.use((config) => {
+  const jwt = localStorage.getItem('jwt') || ''
+  config.headers = config.headers || {}
+  if (config.headers && jwt) { config.headers.Authorization = `Bearer ${jwt}` }
+  return config
+})
+
+export { axiosInstance as ajax }
 
 // 封装 axios
 type Options = {
@@ -62,25 +78,25 @@ export const useAjax = (options?: Options) => {
   const ajax = {
     get: <T> (path: string, config?: AxiosRequestConfig<any> | undefined) => {
       if (showLoading) { setVisible(true) }
-      return axios.get<T>(path, config).catch(onHttpError).finally(() => {
+      return axiosInstance.get<T>(path, config).catch(onHttpError).finally(() => {
         if (showLoading) { setVisible(false) }
       })
     },
     post: <T> (path: string, data: JSONValue, config?: AxiosRequestConfig<any> | undefined) => {
       if (showLoading) { setVisible(true) }
-      return axios.post<T>(path, data, config).catch(onHttpError).finally(() => {
+      return axiosInstance.post<T>(path, data, config).catch(onHttpError).finally(() => {
         if (showLoading) { setVisible(false) }
       })
     },
     patch: <T> (path: string, data: JSONValue, config?: AxiosRequestConfig<any> | undefined) => {
       if (showLoading) { setVisible(true) }
-      return axios.patch<T>(path, data, config).catch(onHttpError).finally(() => {
+      return axiosInstance.patch<T>(path, data, config).catch(onHttpError).finally(() => {
         if (showLoading) { setVisible(false) }
       })
     },
     destory: <T> (path: string, config?: AxiosRequestConfig<any> | undefined) => {
       if (showLoading) { setVisible(true) }
-      return axios.delete<T>(path, config).catch(onHttpError).finally(() => {
+      return axiosInstance.delete<T>(path, config).catch(onHttpError).finally(() => {
         if (showLoading) { setVisible(false) }
       })
     },
